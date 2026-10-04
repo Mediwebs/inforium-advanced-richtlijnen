@@ -79,5 +79,20 @@
       "open-source"
     ],
     "patientData": false
+  },
+  {
+    "id": "groningen",
+    "name": "Medische Oncologie Groningen",
+    "version": "0.3.0",
+    "kind": "source-library",
+    "url": "https://medischeoncologiegroningen.nl/",
+    "topics": [
+      "oncologie"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
   }
 ]

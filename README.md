@@ -1,4 +1,6 @@
-# Inforium CHIPboard v0.2
+# Inforium CHIPboard v0.3
+
+[Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
 Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbreiding en verificatie](docs/V0.2.md).
 
