@@ -1,0 +1,42 @@
+[
+  {
+    "id": "site",
+    "title": "Richtlijnendatabase",
+    "url": "https://richtlijnendatabase.nl/",
+    "checked_at": "2026-10-04",
+    "clinical_review_status": "not_professionally_reviewed"
+  },
+  {
+    "id": "structure",
+    "title": "Uitleg van de Richtlijnendatabase",
+    "url": "https://richtlijnendatabase.nl/instructies/hoe_werkt_het.html",
+    "checked_at": "2026-10-04",
+    "clinical_review_status": "not_professionally_reviewed"
+  },
+  {
+    "id": "search-update",
+    "title": "Vernieuwing zoekfunctie",
+    "url": "https://richtlijnendatabase.nl/nieuws/zoekfunctie_richtlijnendatabase_vernieuwd_sneller_het_juiste_antwoord.html",
+    "published_at": "2025-09-26",
+    "checked_at": "2026-10-04",
+    "clinical_review_status": "not_professionally_reviewed"
+  },
+  {
+    "id": "allergy-clinical",
+    "title": "Klinische diagnostiek bij allergie van de bovenste luchtwegen",
+    "url": "https://richtlijnendatabase.nl/richtlijn/allergie_van_de_bovenste_luchtwegen/klinische_diagnostiek_bij_allergie_van_de_bovenste_luchtwegen.html",
+    "published_at": "2019-12-18",
+    "validity_assessed_at": "2020-02-12",
+    "checked_at": "2026-10-04",
+    "clinical_review_status": "not_professionally_reviewed"
+  },
+  {
+    "id": "bppd-anterior",
+    "title": "Diagnose BPPD anterieure kanaal",
+    "url": "https://richtlijnendatabase.nl/richtlijn/benigne_paroxysmale_positieduizeligheid_bppd/diagnose_van_bppd/diagnose_bppd_anterieure_kanaal.html",
+    "published_at": "2026-03-06",
+    "validity_assessed_at": "2020-02-01",
+    "checked_at": "2026-10-04",
+    "clinical_review_status": "not_professionally_reviewed"
+  }
+]

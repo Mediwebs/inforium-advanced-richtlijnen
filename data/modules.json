@@ -1,0 +1,32 @@
+[
+  {
+    "id": "richtlijnen",
+    "name": "Richtlijnen",
+    "version": "0.1.0",
+    "kind": "source-library",
+    "url": "https://richtlijnendatabase.nl/",
+    "topics": [
+      "neus",
+      "duizeligheid"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
+  },
+  {
+    "id": "inforium-oncologie",
+    "name": "Inforium Advanced Oncologie",
+    "version": "0.1.0",
+    "kind": "external-link",
+    "url": "https://mediwebs.github.io/inforium-advanced-oncologie/",
+    "topics": [
+      "oncologie"
+    ],
+    "capabilities": [
+      "open-source"
+    ],
+    "patientData": false
+  }
+]

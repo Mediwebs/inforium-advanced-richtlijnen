@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:inforium:action:1",
+  "title": "Inforium actierecord v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "summary",
+    "source_id",
+    "source_section",
+    "review_note",
+    "record_type",
+    "symptoms",
+    "synonyms",
+    "action",
+    "modality",
+    "applicability",
+    "exclusions",
+    "exclusion_coverage",
+    "evidence_grade",
+    "editorial_status",
+    "reviewed_by",
+    "reviewed_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_section": {
+      "type": "string"
+    },
+    "review_note": {
+      "type": "string"
+    },
+    "record_type": {
+      "enum": [
+        "action",
+        "navigation_only"
+      ]
+    },
+    "symptoms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "synonyms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "action": {
+      "enum": [
+        "urgency",
+        "history",
+        "examination",
+        "diagnostics",
+        "treatment",
+        "shared_decision",
+        "referral",
+        "followup"
+      ]
+    },
+    "modality": {
+      "enum": [
+        "do",
+        "do_not",
+        "consider",
+        "not_applicable"
+      ]
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "any_of"
+      ],
+      "properties": {
+        "any_of": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "all_of"
+            ],
+            "properties": {
+              "all_of": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "field",
+                    "operator",
+                    "value",
+                    "source_locator"
+                  ],
+                  "properties": {
+                    "field": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "enum": [
+                        "equals"
+                      ]
+                    },
+                    "value": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "number"
+                      ]
+                    },
+                    "source_locator": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "exclusions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "any_of"
+      ],
+      "properties": {
+        "any_of": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "all_of"
+            ],
+            "properties": {
+              "all_of": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "field",
+                    "operator",
+                    "value",
+                    "source_locator"
+                  ],
+                  "properties": {
+                    "field": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "enum": [
+                        "equals"
+                      ]
+                    },
+                    "value": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "number"
+                      ]
+                    },
+                    "source_locator": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "exclusion_coverage": {
+      "enum": [
+        "not_exhaustive",
+        "reviewed"
+      ]
+    },
+    "evidence_grade": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "editorial_status": {
+      "enum": [
+        "needs_professional_review",
+        "professionally_reviewed",
+        "review_due"
+      ]
+    },
+    "reviewed_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reviewed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "record_type": {
+            "const": "navigation_only"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "modality": {
+            "const": "not_applicable"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "editorial_status": {
+            "const": "professionally_reviewed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reviewed_by": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  ]
+}

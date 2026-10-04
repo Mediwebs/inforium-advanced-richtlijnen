@@ -1,0 +1,62 @@
+[
+  {
+    "id": "context-unknown",
+    "action": "Zoek neusverstopping + anamnese zonder andere context.",
+    "expected": "Allergievoorbeelden hoogstens mogelijk relevant; ontbrekende verdenking en setting zichtbaar."
+  },
+  {
+    "id": "context-complete",
+    "action": "Kies kind, expliciete verdenking luchtwegallergie, tweede/derde lijn en anamnese.",
+    "expected": "Beide anamnesevoorbeelden passen bij bekende context; redactionele waarschuwing blijft staan."
+  },
+  {
+    "id": "adult",
+    "action": "Wijzig kind naar volwassene.",
+    "expected": "Kindspecifiek record niet in passende of mogelijk relevante groep."
+  },
+  {
+    "id": "no-diagnosis-inference",
+    "action": "Typ kind met langdurige neusverstopping.",
+    "expected": "Geen automatische allergieverdenking of verzonnen numerieke duurgrens."
+  },
+  {
+    "id": "unknown-not-absent",
+    "action": "Gebruik synthetische testvoorwaarde pregnancy=false, zonder zwangerschap ingevuld.",
+    "expected": "Voorwaarde unknown; resultaat niet volledig passend."
+  },
+  {
+    "id": "negation",
+    "action": "Typ geen duizeligheid, wel neusverstopping.",
+    "expected": "Duizeligheid niet als positieve klacht; interpretatie bewerkbaar."
+  },
+  {
+    "id": "grouping",
+    "action": "Gebruik synthetische fixture (A AND B) OR (C AND D); voer alleen A en D in.",
+    "expected": "Geen complete match; geen kruiscombinatie van alternatieven."
+  },
+  {
+    "id": "exclusion",
+    "action": "Gebruik synthetische uitsluitingsvoorwaarde met true, false en unknown.",
+    "expected": "True blokkeert passende groep; unknown blijft onzeker; false sluit niet uit."
+  },
+  {
+    "id": "navigation",
+    "action": "Zoek positieduizeligheid en open het BPPD-record.",
+    "expected": "Alleen bronnavigatie, geen zelfstandige diagnoseregel; beide brondata zichtbaar."
+  },
+  {
+    "id": "empty",
+    "action": "Zoek een klacht buiten de voorbeeldset.",
+    "expected": "Eerlijke lege staat met dekkingsmelding; geen gegenereerde aanbevelingen."
+  },
+  {
+    "id": "accessibility",
+    "action": "Doorloop zoeken, filters, resultaten en details uitsluitend met toetsenbord; herhaal op smal scherm.",
+    "expected": "Alle functies bruikbaar; focus zichtbaar en behouden bij sluiten detailpaneel."
+  },
+  {
+    "id": "deployment",
+    "action": "Open gepubliceerde project-URL, wijzig filters en herlaad.",
+    "expected": "Assets laden, route werkt, bronnen openen en echte aantallen worden weergegeven."
+  }
+]

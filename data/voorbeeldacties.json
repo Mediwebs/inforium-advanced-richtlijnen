@@ -1,0 +1,130 @@
+[
+  {
+    "id": "allergy-history",
+    "title": "Gerichte anamnese bij mogelijke luchtwegallergie",
+    "summary": "Bespreek klachtenpatroon, duur, hinder, atopie, klachten van de lagere luchtwegen en eerdere diagnostiek en behandeling.",
+    "record_type": "action",
+    "symptoms": [
+      "neusverstopping",
+      "niezen"
+    ],
+    "synonyms": [
+      "verstopte neus"
+    ],
+    "action": "history",
+    "modality": "do",
+    "source_id": "allergy-clinical",
+    "source_section": "Aanbeveling",
+    "applicability": {
+      "any_of": [
+        {
+          "all_of": [
+            {
+              "field": "suspected_condition",
+              "operator": "equals",
+              "value": "upper_airway_allergy",
+              "source_locator": "allergy-clinical / Toepassingsgebied en Aanbeveling"
+            },
+            {
+              "field": "setting",
+              "operator": "equals",
+              "value": "secondary_or_tertiary",
+              "source_locator": "allergy-clinical / Toepassingsgebied en Aanbeveling"
+            }
+          ]
+        }
+      ]
+    },
+    "exclusions": {
+      "any_of": []
+    },
+    "exclusion_coverage": "not_exhaustive",
+    "evidence_grade": null,
+    "editorial_status": "needs_professional_review",
+    "review_note": "Beperkt voorbeeld; geen volledige module-extractie.",
+    "reviewed_by": null,
+    "reviewed_at": null
+  },
+  {
+    "id": "allergy-child-history",
+    "title": "Aanvullende vragen bij kinderen",
+    "summary": "Vraag bij kinderen ook naar concentratie, slaperigheid overdag en functioneren op school.",
+    "record_type": "action",
+    "symptoms": [
+      "neusverstopping",
+      "niezen"
+    ],
+    "synonyms": [
+      "verstopte neus"
+    ],
+    "action": "history",
+    "modality": "do",
+    "source_id": "allergy-clinical",
+    "source_section": "Aanbeveling",
+    "applicability": {
+      "any_of": [
+        {
+          "all_of": [
+            {
+              "field": "suspected_condition",
+              "operator": "equals",
+              "value": "upper_airway_allergy",
+              "source_locator": "allergy-clinical / Toepassingsgebied en Aanbeveling"
+            },
+            {
+              "field": "setting",
+              "operator": "equals",
+              "value": "secondary_or_tertiary",
+              "source_locator": "allergy-clinical / Toepassingsgebied en Aanbeveling"
+            },
+            {
+              "field": "age_group",
+              "operator": "equals",
+              "value": "child",
+              "source_locator": "allergy-clinical / Toepassingsgebied en Aanbeveling"
+            }
+          ]
+        }
+      ]
+    },
+    "exclusions": {
+      "any_of": []
+    },
+    "exclusion_coverage": "not_exhaustive",
+    "evidence_grade": null,
+    "editorial_status": "needs_professional_review",
+    "review_note": "Beperkt voorbeeld; geen volledige module-extractie.",
+    "reviewed_by": null,
+    "reviewed_at": null
+  },
+  {
+    "id": "bppd-navigation",
+    "title": "Bron over positionele downbeatnystagmus",
+    "summary": "Open de module voor de samenhang tussen bevindingen en differentiaaldiagnostiek. Dit record bevat geen zelfstandige diagnostische beslisregel.",
+    "record_type": "navigation_only",
+    "symptoms": [
+      "positieduizeligheid"
+    ],
+    "synonyms": [],
+    "action": "diagnostics",
+    "modality": "not_applicable",
+    "source_id": "bppd-anterior",
+    "source_section": "Aanbeveling, Overwegingen en Onderbouwing gezamenlijk lezen",
+    "applicability": {
+      "any_of": [
+        {
+          "all_of": []
+        }
+      ]
+    },
+    "exclusions": {
+      "any_of": []
+    },
+    "exclusion_coverage": "not_exhaustive",
+    "evidence_grade": null,
+    "editorial_status": "needs_professional_review",
+    "review_note": "Nuance rond centrale oorzaken vraagt professionele beoordeling. Publicatiedatum en geldigheidsbeoordeling verschillen.",
+    "reviewed_by": null,
+    "reviewed_at": null
+  }
+]
