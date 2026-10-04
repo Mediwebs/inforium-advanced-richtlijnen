@@ -14,7 +14,14 @@ Datum: 2026-10-04. Status: technische prototypecontrole; geen medische, juridisc
 
 ## Relatie met de meegeleverde acceptatiegevallen
 
-context-unknown, context-complete, adult, unknown-not-absent, negation, grouping, exclusion en navigation worden waar relevant met pure logische tests afgedekt. De logica staat in research/ en wordt niet gepubliceerd. Geen NLP-parser of patiëntcontextinterface; de actuele gebruikerswens zonder patiëntgegevens heeft voorrang. no-diagnosis-inference wordt in de UI voorkomen door geen vrije tekst of diagnostische interpretatie toe te voegen. empty en accessibility zijn met de browser gecontroleerd. deployment wordt na publicatie op de openbare Pages-URL gecontroleerd.
+context-unknown, context-complete, adult, unknown-not-absent, negation, grouping, exclusion en navigation worden waar relevant met pure logische tests afgedekt. De logica staat in research/ en wordt niet gepubliceerd. Geen NLP-parser of patiëntcontextinterface; de actuele gebruikerswens zonder patiëntgegevens heeft voorrang. no-diagnosis-inference wordt in de UI voorkomen door geen vrije tekst of diagnostische interpretatie toe te voegen. empty en accessibility zijn met de browser gecontroleerd. deployment is na publicatie op de openbare Pages-URL gecontroleerd; dezelfde browsercontroles slagen daar.
+
+## Openbare publicatie
+
+- Live: https://mediwebs.github.io/inforium-advanced-richtlijnen/
+- Repository: https://github.com/Mediwebs/inforium-advanced-richtlijnen
+- Eerste publicatierun: https://github.com/Mediwebs/inforium-advanced-richtlijnen/actions/runs/37186613580 (geslaagd).
+- Openbare browsercontrole geslaagd op 2026-10-04; vijf bronlinks geven HTTP 200. Bereikbaarheid is geen medische actualiteitsbeoordeling.
 
 ## Niet gerealiseerd of niet bewezen
 

@@ -1,5 +1,7 @@
 # Inforium CHIPboard
 
+[Open het klikbare prototype](https://mediwebs.github.io/inforium-advanced-richtlijnen/).
+
 Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Geen patiëntinvoer of gegenereerde medische antwoorden.
 
 ## Gebruiken
