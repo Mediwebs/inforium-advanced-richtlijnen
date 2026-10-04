@@ -1,3 +1,4 @@
+import {buildSearchIndex,searchResources} from './search.js';
 import {decodeGroningen,filterGroningen,groningenKinds} from './groningen.js';
 import {filterResources, validateManifest, stageUpdate} from './core.js';
 const $ = selector => document.querySelector(selector);
@@ -26,7 +27,7 @@ function makeResources(){
  return [...real,...added,...examples];
 }
 function heading(kicker,title,description,extra=''){return '<div class="heading"><div><div class="eyebrow">'+kicker+'</div><h1>'+title+'</h1><p class="intro">'+description+'</p></div>'+extra+'</div>';}
-function card(r,board=false){return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div><div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
+function card(r,board=false,hit=null){return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div>'+(hit?searchReason(hit):'')+'<div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
 function options(dict,current,all){return '<option value="">'+all+'</option>'+Object.entries(dict).map(([v,label])=>'<option value="'+v+'" '+(current===v?'selected':'')+'>'+label+'</option>').join('');}
 function library(){
  const found=filterResources(resources.filter(r=>!r.groningen),filters);
@@ -60,8 +61,8 @@ function management(){
  '<div class="panel"><h2>Bronregister</h2><p>'+sources.length+' bronverwijzingen, inclusief 3 algemene verwijzingen uit de overdracht. De catalogus bevat '+catalog.length+' aanvullende bronkaarten. Laatst opnieuw geraadpleegde modulemetadata: 4 oktober 2026.</p><div class="table-wrap"><table><thead><tr><th>Bron</th><th>Publicatie</th><th>Geldigheid beoordeeld</th><th>Raadpleging</th></tr></thead><tbody>'+sources.map(s=>'<tr><td>'+external(s.url,s.title)+'<small>Geen professionele goedkeuring van afgeleide records</small></td><td>'+date(s.published_at)+'</td><td>'+date(s.validity_assessed_at)+'</td><td>'+date(s.checked_at)+'</td></tr>').join('')+'</tbody></table></div></div><div class="panel"><h2>Als een bron verandert of niet opent</h2><p>Behoud de laatst gecontroleerde versie en datum. Zet hercontrole uit bij de eigenaar. Een technische fout bewijst niet dat medische informatie vervallen is. Het meegeleverde controlescript maakt een bereikbaarheidsrapport en wijzigt geen inhoud of goedkeuringsstatus.</p></div>';
 }
 function scope(){return heading('GEBRUIK & AFBAKENING','Een bronnenwerkplek voor professionals.','Dit prototype onderzoekt het vinden en combineren van kennis. Het is niet gereed voor klinische inzet.')+
- '<div class="two-columns"><section class="panel"><h2>Wat deze versie doet</h2><ul class="scope-list"><li>Bibliotheekmetadata filteren op onderwerp, taak en brontype.</li><li>Herleidbare bronkaarten naast elkaar tonen.</li><li>Vaste externe links openen zonder contextoverdracht.</li><li>Een modulaire structuur en beheerroute demonstreren.</li></ul></section><section class="panel"><h2>Grenzen van deze versie</h2><ul class="scope-list"><li>Geen patiëntinvoer, dossiers, uploads of vrije notities.</li><li>Geen diagnose, triage, dosering of gepersonaliseerde aanbeveling.</li><li>Geen taalmodel of gegenereerde medische antwoorden.</li><li>Geen professionele validatie van de drie voorbeeldrecords.</li></ul></section></div>'+
- '<div class="panel"><h2>MDR: ontwerpkeuze, geen vrijstelling</h2><p>Het ontbreken van patiëntgegevens of generatieve AI garandeert niet dat software buiten de MDR valt. Beoogd gebruik, functies en hun samenhang zijn bepalend. Ook zoeken kan een medisch doel dienen. Nieuwe functies en modulecombinaties vragen daarom een kwalificatiebeoordeling vóór klinische inzet.</p>'+external('https://health.ec.europa.eu/document/download/b45335c5-1679-4c71-a91c-fc7a4d37f12b_en?filename=md_mdcg_2019_11_guidance_qualification_classification_software_en.pdf','MDCG 2019-11 rev.1 · juni 2025')+'</div><div class="panel"><h2>Gegevens & herkomst</h2><p>Filters en bordselecties blijven in paginageheugen. Er zijn geen analytics, cookies, externe lettertypen of AI-aanroepen toegevoegd. De hostingprovider ontvangt gewone webverzoeken; externe websites hanteren hun eigen privacybeleid.</p><p>Basis: Inforium_Richtlijnen_Codex_Overdracht.zip, versie 4 oktober 2026. De bronkaarten zijn beperkte redactionele voorbeelden. Daarnaast is de eerdere Groningse inventaris van 3 oktober 2026 gekoppeld. Geen volledige of opnieuw inhoudelijk gecontroleerde database of regionale afsprakenbank.</p></div>';
+ '<div class="two-columns"><section class="panel"><h2>Wat deze versie doet</h2><ul class="scope-list"><li>Bibliotheekmetadata filteren op onderwerp, taak en brontype.</li><li>Herleidbare bronkaarten naast elkaar tonen.</li><li>Vaste externe links openen zonder contextoverdracht.</li><li>Een modulaire structuur en beheerroute demonstreren.</li></ul></section><section class="panel"><h2>Grenzen van deze versie</h2><ul class="scope-list"><li>Alleen algemene zoektrefwoorden; geen patiëntgegevens, dossiers, uploads of vrije notities.</li><li>Geen diagnose, triage, dosering of gepersonaliseerde aanbeveling.</li><li>Geen taalmodel of gegenereerde medische antwoorden.</li><li>Geen professionele validatie van de drie voorbeeldrecords.</li></ul></section></div>'+
+ '<div class="panel"><h2>MDR: ontwerpkeuze, geen vrijstelling</h2><p>Het ontbreken van patiëntgegevens of generatieve AI garandeert niet dat software buiten de MDR valt. Beoogd gebruik, functies en hun samenhang zijn bepalend. Ook zoeken kan een medisch doel dienen. Nieuwe functies en modulecombinaties vragen daarom een kwalificatiebeoordeling vóór klinische inzet.</p>'+external('https://health.ec.europa.eu/document/download/b45335c5-1679-4c71-a91c-fc7a4d37f12b_en?filename=md_mdcg_2019_11_guidance_qualification_classification_software_en.pdf','MDCG 2019-11 rev.1 · juni 2025')+'</div><div class="panel"><h2>Gegevens & herkomst</h2><p>Zoektrefwoorden, filters en bordselecties blijven alleen in paginageheugen. Zoekopdrachten worden niet in de URL gezet, opgeslagen of verstuurd. Er zijn geen analytics, cookies, externe lettertypen of AI-aanroepen toegevoegd. De hostingprovider ontvangt gewone webverzoeken; externe websites hanteren hun eigen privacybeleid.</p><p>Basis: Inforium_Richtlijnen_Codex_Overdracht.zip, versie 4 oktober 2026. De bronkaarten zijn beperkte redactionele voorbeelden. Daarnaast is de eerdere Groningse inventaris van 3 oktober 2026 gekoppeld. Geen volledige of opnieuw inhoudelijk gecontroleerde database of regionale afsprakenbank.</p></div>';
 }
 
 function groningenPage(){
@@ -86,9 +87,40 @@ function groningenDetails(r){
  (r.related.length?'<h3>Gekoppelde bronnen in de inventaris</h3><p>Oorspronkelijke relaties; geen automatische aanbeveling.</p><div class="related">'+r.related.map(id=>{const other=groningenRecords.find(x=>x.id===id);return '<button data-related="'+id+'">'+esc(other.title)+'</button>';}).join('')+'</div>':'');
 }
 
+
+let searchIndex=[],searchQuery='',searchPage=0,searchProvider='',searchComplete=false;
+function searchPageView(){
+ const response=searchResources(searchIndex,searchQuery,{provider:searchProvider,completeOnly:searchComplete}),rows=response.results;
+ const pages=Math.max(1,Math.ceil(rows.length/12));searchPage=Math.min(searchPage,pages-1);
+ const full=rows.filter(r=>r.matched===r.total).length;
+ let resultHtml='',previous='';
+ for(const hit of rows.slice(searchPage*12,(searchPage+1)*12)){
+  const group=hit.matched===hit.total?'Alle trefwoorden gevonden':'Een deel van de trefwoorden gevonden';
+  if(group!==previous){resultHtml+='<h2 class="search-group">'+group+'</h2>';previous=group;}
+  resultHtml+=card(hit.record,false,hit);
+ }
+ return heading('ALGEMEEN ZOEKEN','Zoek over alle aangesloten bronnen.','Eén zoekopdracht in de richtlijnselectie en de Groningse inventaris. De grootste trefwoordovereenkomst staat vooraan.')+
+ '<p class="search-scope">'+searchIndex.length.toLocaleString('nl-NL')+' bronkaarten doorzoekbaar · titels, codes, onderwerpen, broncontexten en gekoppelde titels. Geen volledige documentteksten of live internetzoekactie.</p>'+
+ '<div class="searchbox"><div class="filters search-filters"><label>Broncollectie<select id="search-provider">'+options({national:'Landelijke richtlijnselectie',groningen:'Oncologie Groningen'},searchProvider,'Alle aangesloten bronnen')+'</select></label><label class="toggle"><input id="search-complete" type="checkbox" '+(searchComplete?'checked':'')+'>Alle trefwoorden moeten overeenkomen</label><button id="search-clear">Wis zoekopdracht</button></div><details class="ranking-help"><summary>Hoe wordt de volgorde bepaald?</summary><p>Eerst het aantal verschillende gevonden trefwoorden. Daarna de plek: broncode en titel tellen zwaarder dan broncontext of een gekoppelde titel. Een exacte titel of woordgroep krijgt extra gewicht. Woordbegin en enkele expliciet vermelde zoekverwanten tellen minder zwaar dan exacte woorden. Gelijke resultaten staan op titelvolgorde.</p><p>De volgorde drukt tekstovereenkomst uit, geen medische geschiktheid, kwaliteit of actualiteit. Bronstatussen blijven apart zichtbaar. Zoekverwanten zijn redactionele zoekhulpen, geen gelijkstelling van medische begrippen.</p></details></div>'+
+ (response.error?'<div class="notice" role="alert">'+esc(response.error)+'</div>':!response.terms.length?'<div class="empty"><h2>Vul bovenaan enkele trefwoorden in</h2><p>Bijvoorbeeld “borstkanker radiotherapie”, “neus anamnese” of een broncode. Gebruik algemene trefwoorden, geen patiëntgegevens.</p></div>':
+ '<div class="section-row"><h2>Resultaten voor “'+esc(searchQuery)+'”</h2><span class="count" role="status">'+rows.length+' resultaten · '+full+' met alle trefwoorden · pagina '+(searchPage+1)+' van '+pages+'</span></div>'+
+ (rows.length?'<div class="grid">'+resultHtml+'</div><div class="actions"><button id="search-prev" '+(searchPage===0?'disabled':'')+'>Vorige pagina</button><button id="search-next" '+(searchPage+1>=pages?'disabled':'')+'>Volgende pagina</button></div>':'<div class="empty"><h3>Geen trefwoordovereenkomst gevonden</h3><p>Probeer minder of andere woorden, of kies alle broncollecties. De catalogus bevat niet alle medische informatie. Er wordt geen antwoord gegenereerd.</p></div>'));
+}
+function searchReason(hit){
+ return '<section class="match search-reasons" aria-label="Waarom gevonden"><p><b>Waarom gevonden</b></p><strong>'+hit.matched+' van '+hit.total+' trefwoorden gevonden</strong>'+
+ (hit.phraseBonus?'<p>Exacte woordgroep in de titel telt extra mee.</p>':'')+
+ '<ul>'+hit.matches.map(m=>'<li><b>'+esc(m.term)+'</b> · '+esc(m.field)+(m.mode==='alias'?' · zoekverwant: '+esc(m.alias):m.mode==='prefix'?' · woordbegin':'')+'<span>“'+esc(m.snippet)+'”</span></li>').join('')+'</ul>'+
+ (hit.missing.length?'<p>Niet gevonden: '+hit.missing.map(esc).join(', ')+'</p>':'')+'</section>';
+}
+document.addEventListener('submit',e=>{
+ if(e.target.id!=='global-search')return;
+ e.preventDefault();searchQuery=$('#global-query').value.trim();searchPage=0;
+ location.hash='zoeken';render();$('#main').focus();
+});
+
 function render(){
  const page=location.hash.slice(1)||'bibliotheek';
- const views={bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
+ const views={zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
  $('#main').innerHTML=(views[page]||library)();
  document.querySelectorAll('[data-nav]').forEach(a=>{const active=a.dataset.nav===page; a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  $('#board-count').textContent=selected.size;
@@ -109,6 +141,8 @@ function showResource(id){
 }
 document.addEventListener('click',event=>{
  const button=event.target.closest('button');if(!button)return;
+ if(button.id==='search-clear'){searchQuery='';$('#global-query').value='';searchPage=0;render();$('#global-query').focus();}
+ if(button.id==='search-prev'||button.id==='search-next'){searchPage+=button.id==='search-next'?1:-1;render();$('#main').focus();}
  if(button.dataset.related){$('#detail').close();showResource(button.dataset.related);}
  if(button.id==='g-reset'){Object.assign(groningenFilters,{audience:'',kind:'',group:'',path:''});groningenPageIndex=0;render();$('#g-audience').focus();}
  if(button.id==='g-prev'||button.id==='g-next'){groningenPageIndex+=button.id==='g-next'?1:-1;render();$('#'+button.id).focus();}
@@ -123,6 +157,8 @@ document.addEventListener('click',event=>{
  if(button.id==='contract')showDialog('<div class="dialog-top"><span class="badge">Aansluitroute</span><button data-close>Sluiten ✕</button></div><h2 id="detail-title">Een module toevoegen</h2><ol class="scope-list"><li>Leg eigenaar, bronrechten en beoogd gebruik vast.</li><li>Voeg een manifest toe aan data/modules.json met vaste HTTPS-link en patientData: false.</li><li>Map bronmetadata naar een eigen adapter; behoud versie en herkomst.</li><li>Laat inhoud en modulecombinatie beoordelen.</li><li>Valideer, test en publiceer een nieuwe versie via GitHub.</li></ol><p>Een link is nog geen API-integratie. Uitwisseling en authenticatie vereisen aanvullende bouw en toetsing.</p>');
 });
 document.addEventListener('change',e=>{
+ if(e.target.id==='search-provider'){searchProvider=e.target.value;searchPage=0;render();$('#search-provider').focus();}
+ if(e.target.id==='search-complete'){searchComplete=e.target.checked;searchPage=0;render();$('#search-complete').focus();}
  if(e.target.id.startsWith('g-')){const key=e.target.id.slice(2);if(Object.hasOwn(groningenFilters,key)){groningenFilters[key]=e.target.value;if(key==='group')groningenFilters.path='';groningenPageIndex=0;render();$('#g-'+key).focus();}}
  if(e.target.id==='specialty'){Object.assign(filters,{specialty:e.target.value,topic:'',task:''});render();$('#specialty').focus();}
  if(['topic','task','layer'].includes(e.target.id)){const id=e.target.id;filters[id]=e.target.value;render();$('#'+id).focus();}
@@ -132,5 +168,5 @@ window.addEventListener('hashchange',()=>{render();$('#main').focus();});
 try {
  [sources,actions,modules,catalog,groningenPayload]=await Promise.all([read('./data/bronnen.json'),read('./data/voorbeeldacties.json'),read('./data/modules.json'),read('./data/catalogus.json'),read('./data/groningen.json')]);
  sources=[...sources,...catalog];
- modules.forEach(validateManifest); groningenRecords=decodeGroningen(groningenPayload); resources=[...makeResources(),...groningenRecords];render();
+ modules.forEach(validateManifest); groningenRecords=decodeGroningen(groningenPayload); resources=[...makeResources(),...groningenRecords];searchIndex=buildSearchIndex(resources,{topics,specialties,tasks,kinds:groningenKinds});render();
 } catch(error){$('#main').innerHTML='<div class="empty"><h1>De brongegevens konden niet worden geladen.</h1><p>Er worden geen vervangende antwoorden getoond. Probeer de pagina opnieuw te laden.</p><a href="./">Opnieuw laden</a></div>';console.error(error);}

@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.3
+# Inforium CHIPboard v0.4
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -6,7 +6,9 @@ Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbrei
 
 [Open het klikbare prototype](https://mediwebs.github.io/inforium-advanced-richtlijnen/).
 
-Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Geen patiëntinvoer of gegenereerde medische antwoorden.
+Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met algemene trefwoorden; geen dossiers of gegenereerde medische antwoorden.
+
+[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 4.640 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
 
 ## Gebruiken
 
@@ -33,7 +35,7 @@ Open http://127.0.0.1:4173. De relatieve assets en hash-navigatie werken ook ond
 - 0 professioneel goedgekeurde afgeleide records; 0 echte lokale, regionale, patiënten- of sociale bronnen gekoppeld.
 - Bronmetadata van de twee inhoudelijke modules opnieuw geraadpleegd op 2026-10-04; dit is geen medische validatie.
 - Filters en geselecteerde kaarten leven alleen in paginageheugen. Herladen wist het bord.
-- Geen generatieve AI, tracking, patiëntkenmerken, vrije tekstvelden of EPD-koppeling. Hosting en geopende externe sites verwerken gewone webverzoeken.
+- Geen generatieve AI, tracking, patiëntkenmerken, EPD-koppeling of verzending van zoektrefwoorden. Hosting en geopende externe sites verwerken gewone webverzoeken.
 - Geen diagnose, triage, behandelkeuze, geschiktheidsscore of MDR-vrijstellingsclaim.
 
 De aangeleverde toepasbaarheidslogica blijft uitsluitend in `research/logic.js` voor reproduceerbare tests, buiten de gepubliceerde website. De openbare UI filtert bibliotheekmetadata en gebruikt die logica niet.
@@ -48,6 +50,7 @@ De aangeleverde toepasbaarheidslogica blijft uitsluitend in `research/logic.js` 
 | data/voorbeeldacties.json | Ongewijzigde drie overdrachtsrecords |
 | schema/actie.schema.json | Aangeleverd JSON Schema 2020-12 |
 | data/modules.json | Versiebeheerde modulemanifesten |
+| src/search.js | Lokale trefwoordindex, uitlegbare rangschikking en zoekverwanten |
 | src/core.js | Pure metadatafilters, manifestcontrole, demostatus |
 | src/app.js | Schermen en expliciete demonstratiekaarten |
 | research/logic.js | Niet gedeployde logische onderzoeksfixtures |
@@ -74,4 +77,4 @@ GitHub Actions valideert, test en bouwt bij een push naar main, en publiceert di
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.1; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.4; niet klinisch gevalideerd.
