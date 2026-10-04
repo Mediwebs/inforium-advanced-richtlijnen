@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "title",
+      "url",
+      "specialties",
+      "topics",
+      "tasks",
+      "source_kind",
+      "published_at",
+      "validity_assessed_at",
+      "checked_at",
+      "version",
+      "editorial_status",
+      "rights"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https://richtlijnendatabase\\.nl/richtlijn/"
+      },
+      "specialties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "kno",
+            "cardiologie",
+            "oncologie",
+            "radiotherapie"
+          ]
+        }
+      },
+      "topics": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "neus",
+            "gehoor",
+            "hoofd-hals",
+            "atriumfibrilleren",
+            "hartrevalidatie",
+            "borstkanker",
+            "longkanker"
+          ]
+        }
+      },
+      "tasks": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "enum": [
+            "overview",
+            "followup",
+            "diagnostics",
+            "treatment"
+          ]
+        }
+      },
+      "source_kind": {
+        "enum": [
+          "overview",
+          "module"
+        ]
+      },
+      "published_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "date"
+      },
+      "validity_assessed_at": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "format": "date"
+      },
+      "checked_at": {
+        "type": "string",
+        "format": "date"
+      },
+      "version": {
+        "type": "string"
+      },
+      "editorial_status": {
+        "const": "navigation_only"
+      },
+      "rights": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

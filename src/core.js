@@ -1,5 +1,5 @@
 export function filterResources(resources, filters) {
-  return resources.filter(r => (!filters.topic || r.topics.includes(filters.topic)) &&
+  return resources.filter(r => (!filters.specialty || r.specialties?.includes(filters.specialty)) && (!filters.topic || r.topics.includes(filters.topic)) &&
     (!filters.task || r.tasks.includes(filters.task)) &&
     (!filters.layer || r.layer === filters.layer) &&
     (filters.demo || !r.demo));

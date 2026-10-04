@@ -1,0 +1,217 @@
+[
+  {
+    "id": "crs",
+    "title": "Chronische rhinosinusitis en neuspoliepen",
+    "url": "https://richtlijnendatabase.nl/richtlijn/chronische_rhinosinusitis_en_neuspoliepen/startpagina_chronische_rhinosinusitis_en_neuspoliepen.html",
+    "specialties": [
+      "kno"
+    ],
+    "topics": [
+      "neus"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2023-09-19",
+    "validity_assessed_at": "2023-09-07",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "hearing",
+    "title": "Perceptieve slechthorendheid bij volwassenen",
+    "url": "https://richtlijnendatabase.nl/richtlijn/perceptieve_slechthorendheid_bij_volwassenen/perceptieve_slechthorendheid_-_startpagina.html",
+    "specialties": [
+      "kno"
+    ],
+    "topics": [
+      "gehoor"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2016-02-16",
+    "validity_assessed_at": "2016-02-01",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "head-neck",
+    "title": "Hoofd-halstumoren",
+    "url": "https://richtlijnendatabase.nl/richtlijn/hoofd-halstumoren/startpagina_-_hoofd-halstumoren_.html",
+    "specialties": [
+      "kno",
+      "oncologie",
+      "radiotherapie"
+    ],
+    "topics": [
+      "hoofd-hals"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2026-01-28",
+    "validity_assessed_at": "2026-01-28",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "af",
+    "title": "Atriumfibrilleren",
+    "url": "https://richtlijnendatabase.nl/richtlijn/atriumfibrilleren/startpagina_-atriumfibrilleren.html",
+    "specialties": [
+      "cardiologie"
+    ],
+    "topics": [
+      "atriumfibrilleren"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2022-10-17",
+    "validity_assessed_at": null,
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "af-diagnosis",
+    "title": "Definitie en diagnose van atriumfibrilleren",
+    "url": "https://richtlijnendatabase.nl/richtlijn/atriumfibrilleren/definitie_en_diagnose_van_atriumfibrilleren.html",
+    "specialties": [
+      "cardiologie"
+    ],
+    "topics": [
+      "atriumfibrilleren"
+    ],
+    "tasks": [
+      "diagnostics"
+    ],
+    "source_kind": "module",
+    "published_at": "2022-10-17",
+    "validity_assessed_at": "2022-09-01",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "cardiac-rehab",
+    "title": "Hartrevalidatie",
+    "url": "https://richtlijnendatabase.nl/richtlijn/hartrevalidatie/hartrevalidatie_-_startpagina.html",
+    "specialties": [
+      "cardiologie"
+    ],
+    "topics": [
+      "hartrevalidatie"
+    ],
+    "tasks": [
+      "overview",
+      "followup"
+    ],
+    "source_kind": "overview",
+    "published_at": "2024-10-02",
+    "validity_assessed_at": "2024-09-17",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "breast",
+    "title": "Borstkanker",
+    "url": "https://richtlijnendatabase.nl/richtlijn/borstkanker/startpagina_-_borstkanker.html",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [
+      "borstkanker"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2026-06-17",
+    "validity_assessed_at": "2026-06-17",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "lung",
+    "title": "Niet-kleincellig longcarcinoom",
+    "url": "https://richtlijnendatabase.nl/richtlijn/niet_kleincellig_longcarcinoom/niet_kleincellig_longcarcinoom.html",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [
+      "longkanker"
+    ],
+    "tasks": [
+      "overview"
+    ],
+    "source_kind": "overview",
+    "published_at": "2025-09-18",
+    "validity_assessed_at": "2025-09-16",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "dcis-rt",
+    "title": "Radiotherapie na radicale borstsparende operatie van DCIS",
+    "url": "https://richtlijnendatabase.nl/richtlijn/borstkanker/behandeling_dcis/radiotherapie_na_radicale_borstsparende_operatie_van_dcis.html",
+    "specialties": [
+      "oncologie",
+      "radiotherapie"
+    ],
+    "topics": [
+      "borstkanker"
+    ],
+    "tasks": [
+      "treatment"
+    ],
+    "source_kind": "module",
+    "published_at": "2026-06-17",
+    "validity_assessed_at": "2026-06-17",
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  },
+  {
+    "id": "breast-rt",
+    "title": "Borstkanker — Radiotherapie",
+    "url": "https://richtlijnendatabase.nl/richtlijn/borstkanker/behandeling_invasief_carcinoom/primair_chirurgische_behandeling/radiotherapie.html",
+    "specialties": [
+      "oncologie",
+      "radiotherapie"
+    ],
+    "topics": [
+      "borstkanker"
+    ],
+    "tasks": [
+      "treatment"
+    ],
+    "source_kind": "module",
+    "published_at": "2020-02-13",
+    "validity_assessed_at": null,
+    "checked_at": "2026-10-04",
+    "version": "catalogus-0.2.0",
+    "editorial_status": "navigation_only",
+    "rights": "Alleen titel, metadata en bronlink; geen volledige tekst overgenomen."
+  }
+]

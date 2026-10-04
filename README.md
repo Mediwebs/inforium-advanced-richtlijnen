@@ -1,4 +1,6 @@
-# Inforium CHIPboard
+# Inforium CHIPboard v0.2
+
+Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbreiding en verificatie](docs/V0.2.md).
 
 [Open het klikbare prototype](https://mediwebs.github.io/inforium-advanced-richtlijnen/).
 
@@ -6,7 +8,7 @@ Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Geen patië
 
 ## Gebruiken
 
-Selecteer onderwerp, taak en brontype. Open een bronkaart voor herkomst en brondata. Voeg kaarten toe aan Mijn Chipboard om ze naast elkaar te bekijken. Zet de demonstratie van andere bronlagen aan om lokale, regionale/transmurale, patiënten- en sociaal-domeinkaarten te proberen. Deze vier kaarten bevatten **geen echte afspraken of informatie**.
+Selecteer vakgebied, onderwerp, taak en brontype. Open een bronkaart voor herkomst en brondata. Voeg kaarten toe aan Mijn Chipboard om ze naast elkaar te bekijken. Zet de demonstratie van andere bronlagen aan om lokale, regionale/transmurale, patiënten- en sociaal-domeinkaarten te proberen. Deze vier kaarten bevatten **geen echte afspraken of informatie**.
 
 Modules & koppelingen toont het modulecontract en een vaste link naar het bestaande oncologieprototype. Bronnen & updates demonstreert de route van wijziging naar gecontroleerde release. Deze demonstratie is geen beheersysteem en wijzigt geen data.
 
@@ -25,7 +27,7 @@ Open http://127.0.0.1:4173. De relatieve assets en hash-navigatie werken ook ond
 
 ## Inhoud en beperkingen
 
-- 5 bronverwijzingen, 2 inhoudelijke richtlijnmodules, 3 voorbeeldrecords.
+- 15 bronverwijzingen: 3 algemene, 7 richtlijnoverzichten en 5 afzonderlijke modules. 13 unieke bronkaarten: 3 oorspronkelijke voorbeelden en 10 nieuwe navigatiekaarten.
 - 0 professioneel goedgekeurde afgeleide records; 0 echte lokale, regionale, patiënten- of sociale bronnen gekoppeld.
 - Bronmetadata van de twee inhoudelijke modules opnieuw geraadpleegd op 2026-10-04; dit is geen medische validatie.
 - Filters en geselecteerde kaarten leven alleen in paginageheugen. Herladen wist het bord.
@@ -38,6 +40,8 @@ De aangeleverde toepasbaarheidslogica blijft uitsluitend in `research/logic.js` 
 
 | Bestand | Functie |
 |---|---|
+| data/catalogus.json | Tien aanvullende, gedeelde navigatiekaarten voor vier vakgebieden |
+| schema/catalogus.schema.json | Contract voor catalogusmetadata |
 | data/bronnen.json | Originele URL's en afzonderlijke brondata |
 | data/voorbeeldacties.json | Ongewijzigde drie overdrachtsrecords |
 | schema/actie.schema.json | Aangeleverd JSON Schema 2020-12 |

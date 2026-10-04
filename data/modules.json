@@ -1,13 +1,64 @@
 [
   {
-    "id": "richtlijnen",
-    "name": "Richtlijnen",
-    "version": "0.1.0",
+    "id": "kno",
+    "name": "KNO",
+    "version": "0.2.0",
     "kind": "source-library",
     "url": "https://richtlijnendatabase.nl/",
     "topics": [
       "neus",
+      "gehoor",
+      "hoofd-hals",
       "duizeligheid"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
+  },
+  {
+    "id": "cardiologie",
+    "name": "Cardiologie",
+    "version": "0.2.0",
+    "kind": "source-library",
+    "url": "https://richtlijnendatabase.nl/",
+    "topics": [
+      "atriumfibrilleren",
+      "hartrevalidatie"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
+  },
+  {
+    "id": "oncologie",
+    "name": "Oncologie",
+    "version": "0.2.0",
+    "kind": "source-library",
+    "url": "https://richtlijnendatabase.nl/",
+    "topics": [
+      "hoofd-hals",
+      "borstkanker",
+      "longkanker"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
+  },
+  {
+    "id": "radiotherapie",
+    "name": "Radiotherapie",
+    "version": "0.2.0",
+    "kind": "source-library",
+    "url": "https://richtlijnendatabase.nl/",
+    "topics": [
+      "hoofd-hals",
+      "borstkanker"
     ],
     "capabilities": [
       "read-catalog",
