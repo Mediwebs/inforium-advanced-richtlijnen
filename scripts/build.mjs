@@ -1,3 +1,5 @@
+import {validateOncology} from '../src/oncology.js';
+import {mergeSourceImports} from '../src/extra-sources.js';
 import {decodeJgzAdditions,JGZ_COLLECTIONS,validateJgzLibrary} from '../src/jgz.js';
 import {decodeExtraSources} from '../src/extra-sources.js';
 import {decodePatientSources} from '../src/patient-sources.js';
@@ -51,3 +53,11 @@ const jgz=integratedShell(compact).replace('data-experience="inforium"','data-ex
 await fs.writeFile('dist/jgz.html',jgz.replace('<a href="#board"', '<a href="#favorieten" data-nav="favorieten">☆ Mijn Favorieten</a><a href="#board"')); 
 console.log('JGZ:',jgzRows.length,'bronkaarten in',Object.keys(JGZ_COLLECTIONS).length,'collecties');
 console.log('Build OK:',sources.length,'bronnen;',actions.length,'records;',new Set(actions.map(a=>a.source_id)).size,'oorspronkelijke modules;',catalog.length,'aanvullende bronkaarten.');
+
+const umcg=await read('data/umcg.json');
+if(umcg.records.length!==umcg.rows||umcg.records.some(r=>!r.title||new URL(r.url).hostname!=='www.umcg.nl'||new URL(r.url).protocol!=='https:'||r.audience!=='patient'))throw Error('UMCG import ongeldig');
+const oncoPatients=mergeSourceImports(decodePatientSources(await read('data/patient-sources.json')),decodeExtraSources(await read('data/extra-sources.json'))).filter(r=>['kankernl','thuisarts'].includes(r.collection));
+const oncoRows=validateOncology([...jgzNational,...decodePrimaryGuidelines(await read('data/primary-guidelines.json')).filter(r=>r.collection==='nhg'),...groningen.map(r=>({...r,collection:'groningen'})),...pznl,...oncoPatients,...umcg.records]);
+await fs.writeFile('dist/data/oncology-library.json',JSON.stringify(oncoRows));
+const onco=jgz.replace('data-edition="jgz"','data-edition="oncology"').replaceAll('Jeugdgezondheidszorg','Medische Oncologie Groningen').replaceAll('JEUGDGEZONDHEIDSZORG','ONCOLOGIE GRONINGEN').replaceAll('Inforium JGZ','Inforium Oncologie').replaceAll('Voor de jeugdgezondheidszorg','Voor oncologie en palliatieve zorg').replaceAll('JGZ · EIGEN WERKPLEK','ONCOLOGIE · EIGEN WERKPLEK').replaceAll('Zoek richtlijnen, informatie voor ouders of jongeren','Zoek oncologie, palliatie en patiënteninformatie').replace('<a href="#board"','<a href="#favorieten" data-nav="favorieten">☆ Mijn Favorieten</a><a href="#board"');
+await fs.writeFile('dist/oncologie.html',onco);console.log('Oncologie:',oncoRows.length,'bronkaarten');

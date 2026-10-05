@@ -1,3 +1,4 @@
+import {ONCO_COLLECTIONS,validateOncology,oncologyHome,oncologyRegister} from './oncology.js';
 import {JGZ_COLLECTIONS,JGZ_KNOWLEDGE,validateJgzLibrary,jgzHome,jgzRegister,jgzNews} from './jgz.js';
 import {decodeExtraSources,mergeSourceImports,LANGUAGE_LABELS} from './extra-sources.js';
 import {patientActions,patientLink,sharingDialog} from './patient-sharing.js';
@@ -13,8 +14,9 @@ import {decodeGroningen,filterGroningen,groningenKinds} from './groningen.js';
 import {filterResources, validateManifest, stageUpdate} from './core.js';
 const compactMode=document.body.dataset.view==='compact';
 const integratedMode=document.body.dataset.experience==='inforium';
-const jgzMode=document.body.dataset.edition==='jgz';
-if(jgzMode){for(const key of Object.keys(SOURCE_COLLECTIONS))delete SOURCE_COLLECTIONS[key];Object.assign(SOURCE_COLLECTIONS,JGZ_COLLECTIONS);}
+const oncologyMode=document.body.dataset.edition==='oncology';
+const jgzMode=['jgz','oncology'].includes(document.body.dataset.edition);
+if(jgzMode){for(const key of Object.keys(SOURCE_COLLECTIONS))delete SOURCE_COLLECTIONS[key];Object.assign(SOURCE_COLLECTIONS,oncologyMode?ONCO_COLLECTIONS:JGZ_COLLECTIONS);}
 if(integratedMode&&!jgzMode)SOURCE_COLLECTIONS.inforium='Inforium Advanced · voorbeelden';
 let inforiumRecords=[],iaAge='';
 let compactType='',compactFiltersOpen=false,compactHits=new Map();
@@ -29,7 +31,7 @@ const filters = {specialty:'',topic:'',task:'',layer:'',demo:false};
 let pznlPayload,pznlRecords=[],groningenPayload,groningenRecords=[],groningenPageIndex=0;
 const groningenFilters={audience:'patient',kind:'',group:'',path:''};
 let catalog=[], sources=[], actions=[], modules=[], resources=[], selected=new Set(), update='idle', toastTimer;
-const favoriteKey='chipboard-jgz-favorites-v1';
+const favoriteKey=oncologyMode?'chipboard-oncology-favorites-v1':'chipboard-jgz-favorites-v1';
 let favorites={cards:[],packages:[]};
 if(jgzMode){try{const saved=JSON.parse(localStorage.getItem(favoriteKey));if(saved&&Array.isArray(saved.cards)&&Array.isArray(saved.packages)){favorites.cards=saved.cards.filter(x=>typeof x==='string');favorites.packages=saved.packages.filter(x=>x&&typeof x.id==='string'&&Array.isArray(x.cards)).map(x=>({id:x.id,name:typeof x.name==='string'?x.name.slice(0,80):'',cards:x.cards.filter(id=>typeof id==='string')}));}}catch{}}
 function saveFavorites(next){try{localStorage.setItem(favoriteKey,JSON.stringify(next));favorites=next;return true;}catch{toast('Opslaan lukt niet. Sta lokale browseropslag toe.');return false;}}
@@ -120,7 +122,7 @@ let searchIndex=[],searchQuery='',searchPage=0,searchCollections=new Set(Object.
 function searchPageView(){
  const route=location.hash.slice(1),iaType=route==='patienten'?'patient':route==='nieuws'?'news':compactType;
  const currentIndex=integratedMode&&iaAge?searchIndex.filter(x=>x.record.inforium&&x.record.age===iaAge):searchIndex;
- if(compactMode){const result=compactSearch({index:currentIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:integratedMode?iaType:compactType,filtersOpen:compactFiltersOpen,integrated:integratedMode,jgz:jgzMode},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return (integratedMode?'<div class="ia-library-note">'+(jgzMode?'Afzonderlijke JGZ-werkplek · negen broncollecties; herkomst en dekking bij Bronnenoverzicht.':route==='nieuws'?'Nieuws uit de bestaande inventaris en duidelijk gemarkeerde voorbeelden; geen actuele nieuwsfeed.':'Echte bronverwijzingen en herkenbare Inforium-ontwerpvoorbeelden in één overzicht.')+(iaAge?' <strong>Leeftijdslabel voorbeelden: '+esc(iaAge)+'</strong> <button id="ia-age-clear">Wis leeftijd</button>':'')+'</div>':'')+result.html;}
+ if(compactMode){const result=compactSearch({index:currentIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:integratedMode?iaType:compactType,filtersOpen:compactFiltersOpen,integrated:integratedMode,jgz:jgzMode,editionLabel:oncologyMode?'Oncologie':'JGZ'},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return (integratedMode?'<div class="ia-library-note">'+(oncologyMode?'Oncologie Groningen · herkomst en dekking bij Bronnenoverzicht.':jgzMode?'Afzonderlijke JGZ-werkplek · negen broncollecties; herkomst en dekking bij Bronnenoverzicht.':route==='nieuws'?'Nieuws uit de bestaande inventaris en duidelijk gemarkeerde voorbeelden; geen actuele nieuwsfeed.':'Echte bronverwijzingen en herkenbare Inforium-ontwerpvoorbeelden in één overzicht.')+(iaAge?' <strong>Leeftijdslabel voorbeelden: '+esc(iaAge)+'</strong> <button id="ia-age-clear">Wis leeftijd</button>':'')+'</div>':'')+result.html;}
  const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete});
  const refined=refineResults(searchIndex,response.results,refinement,usage),rows=refined.results;
  const kinds=Object.fromEntries([...new Set(searchIndex.map(x=>kindOf(x.record)))].sort((a,b)=>a.localeCompare(b,'nl')).map(k=>[k,k]));
@@ -165,7 +167,7 @@ function render(){
  const page=location.hash.slice(1)||(integratedMode?'start':compactMode?'zoeken':'bibliotheek');
  $('#source-collections').innerHTML='<legend>Welke bronnen wil je doorzoeken?</legend><div class="source-options">'+Object.entries(SOURCE_COLLECTIONS).map(([id,label])=>'<label><input type="checkbox" data-collection="'+id+'" '+(searchCollections.has(id)?'checked':'')+'> <span>'+esc(label)+' <small>('+searchIndex.filter(x=>collectionOf(x.record)===id).length+')</small></span></label>').join('')+'</div><div class="actions"><button type="button" id="sources-all">Alle bronnen</button><button type="button" id="sources-none">Geen bronnen</button></div>';
  const views={...(integratedMode?{start:()=>integratedHome(resources,selected),patienten:searchPageView,nieuws:searchPageView}:{}),zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
- const jgzViews={start:()=>jgzHome(resources,selected),zoeken:searchPageView,patienten:searchPageView,board,favorieten:favoritesPage,nieuws:jgzNews,bronnen:()=>jgzRegister(resources),kaders:scope};
+ const jgzViews={start:()=>oncologyMode?oncologyHome(resources,selected):jgzHome(resources,selected),zoeken:searchPageView,patienten:searchPageView,board,favorieten:favoritesPage,nieuws:oncologyMode?searchPageView:jgzNews,bronnen:()=>oncologyMode?oncologyRegister(resources):jgzRegister(resources),kaders:scope};
  $('#main').innerHTML=jgzMode?(jgzViews[page]||jgzViews.start)():(views[page]||library)();
  document.querySelectorAll('[data-nav]').forEach(a=>{const active=a.dataset.nav===page; a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  $('#board-count').textContent=selected.size;
@@ -195,6 +197,8 @@ function showResource(id){
  if(compactMode){const url=sourceUrl(r);$('#detail-body').querySelectorAll('a.source-link').forEach(a=>a.remove());if(url)$('#detail-body .dialog-top').insertAdjacentHTML('afterend',external(url,'Open oorspronkelijke bron','source-link compact-source-top'));decorateCompact();const hit=compactHits.get(id);if(hit&&(hit.total||hit.refinementMatches?.length)&&location.hash==='#zoeken')$('#detail-body').insertAdjacentHTML('beforeend',searchReason(hit));}
 }
 document.addEventListener('click',async event=>{
+ if(oncologyMode&&event.target.closest('a[href="#nieuws"]')){searchCollections=new Set(['groningen']);searchQuery='';$('#global-query').value='';Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;}
+
  if(compactMode){const row=event.target.closest('[data-detail-card]');if(row&&!event.target.closest('a,button,input,select,summary')){showResource(row.dataset.detailCard);return;}}
  const button=event.target.closest('button');if(!button)return;
  if(jgzMode&&button.dataset.favorite){const id=button.dataset.favorite;if(!resources.some(r=>r.id===id))return;const cards=favorites.cards.includes(id)?favorites.cards.filter(x=>x!==id):[...favorites.cards,id];if(saveFavorites({...favorites,cards})){button.textContent=cards.includes(id)?'★ In Favorieten':'☆ Opslaan in Favorieten';render();toast('Favorieten bijgewerkt');}return;}
@@ -215,6 +219,7 @@ document.addEventListener('click',async event=>{
  if(integratedMode&&button.hasAttribute('data-ia-age')){iaAge=button.dataset.iaAge;searchQuery='';$('#global-query').value='';compactType='patient';searchCollections=new Set(['inforium']);searchPage=0;location.hash='zoeken';render();}
  if(button.id==='ia-age-clear'){iaAge='';render();}
  if(integratedMode&&button.hasAttribute('data-ia-knowledge')){iaAge='';searchQuery='';$('#global-query').value='';compactType='knowledge';searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS));searchPage=0;location.hash='zoeken';render();}
+ if(button.dataset.oncoCollection&&oncologyMode){iaAge='';compactType='';searchQuery='';$('#global-query').value='';searchCollections=new Set([button.dataset.oncoCollection]);Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;location.hash='zoeken';render();return;}
  if(button.dataset.jgzCollection&&jgzMode){iaAge='';compactType=JGZ_KNOWLEDGE.includes(button.dataset.jgzCollection)?'knowledge':'patient';searchQuery='';$('#global-query').value='';searchCollections=new Set([button.dataset.jgzCollection]);Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;location.hash='zoeken';render();}
  if(button.dataset.patientCollection){iaAge='';compactType='patient';searchQuery='';$('#global-query').value='';searchCollections=new Set([button.dataset.patientCollection]);Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;location.hash='zoeken';render();}
  if(button.id==='ia-package'&&integratedMode)showDialog(packagePreview(resources,selected));
@@ -249,7 +254,7 @@ $('#detail').addEventListener('close',()=>{if(location.hash==='#zoeken'&&lastOpe
 document.addEventListener('toggle',e=>{if(e.target.id==='compact-filters'&&e.target.isConnected)compactFiltersOpen=e.target.open;},true);
 window.addEventListener('hashchange',()=>{render();$('#main').focus();});
 try {
- if(jgzMode){resources=validateJgzLibrary(await read('./data/jgz-library.json'));searchIndex=buildSearchIndex(resources,{topics,specialties,tasks,kinds:groningenKinds});render();}else{
+ if(jgzMode){resources=oncologyMode?validateOncology(await read('./data/oncology-library.json')):validateJgzLibrary(await read('./data/jgz-library.json'));groningenRecords=resources.filter(r=>r.groningen);searchIndex=buildSearchIndex(resources,{topics,specialties,tasks,kinds:groningenKinds});render();}else{
  [sources,actions,modules,catalog,groningenPayload,pznlPayload]=await Promise.all([read('./data/bronnen.json'),read('./data/voorbeeldacties.json'),read('./data/modules.json'),read('./data/catalogus.json'),read('./data/groningen.json'),read('./data/pznl.json')]);
  sources=[...sources,...catalog];
  modules.forEach(validateManifest); groningenRecords=decodeGroningen(groningenPayload); pznlRecords=decodePznl(pznlPayload); resources=[...makeResources(),...groningenRecords,...pznlRecords,...decodePrimaryGuidelines(await read('./data/primary-guidelines.json')),...mergeSourceImports(decodePatientSources(await read('./data/patient-sources.json')),decodeExtraSources(await read('./data/extra-sources.json')))];if(integratedMode){inforiumRecords=decodeInforium(await read('./data/inforium-examples.json'));resources.push(...inforiumRecords);}searchIndex=buildSearchIndex(resources.filter(r=>!r.demo||r.inforium),{topics,specialties,tasks,kinds:groningenKinds},{includeDemos:integratedMode});render();
