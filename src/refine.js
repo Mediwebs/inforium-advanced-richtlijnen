@@ -1,6 +1,6 @@
 import {searchResources,collectionOf,SOURCE_COLLECTIONS} from './search.js';
 import {groningenKinds} from './groningen.js';
-export const kindOf=r=>r.inforium||r.pznl?r.kind:r.groningen?groningenKinds[r.kind]:r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht':'Richtlijnmodule'):'Bronpassage';
+export const kindOf=r=>r.inforium||r.pznl||r.primaryGuideline?r.kind:r.groningen?groningenKinds[r.kind]:r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht':'Richtlijnmodule'):'Bronpassage';
 export const audienceOf=r=>r.audience||(r.groningen?'unknown':'professional');
 export const accessOf=r=>r.groningen?(r.locked?'locked':'unflagged'):'unknown';
 export function refineResults(index,hits,{extra='',kind='',audience='',specialty='',access='',sort='relevance'}={},usage=new Map()){

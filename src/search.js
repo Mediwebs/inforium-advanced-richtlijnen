@@ -1,4 +1,4 @@
-export const SOURCE_COLLECTIONS={national:'Richtlijnendatabase',groningen:'Oncologie Groningen',palliaweb:'PZNL · Palliaweb / Pallialine','pznl-patient':'PZNL · Patiënten en naasten'};
+export const SOURCE_COLLECTIONS={nhg:'NHG · Richtlijnen',ncj:'NCJ · JGZ-richtlijnen',national:'Richtlijnendatabase',groningen:'Oncologie Groningen',palliaweb:'PZNL · Palliaweb / Pallialine','pznl-patient':'PZNL · Patiënten en naasten'};
 export const collectionOf=r=>r.collection||(r.groningen?'groningen':'national');
 // Deterministic bibliographic search. Scores express text overlap only.
 export const SEARCH_ALIASES = {
