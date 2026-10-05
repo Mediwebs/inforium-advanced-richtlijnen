@@ -1,4 +1,14 @@
 /* Parallel presentation: shared source data, search logic and session-only state. */
+.ui-icon{width:15px;height:15px;display:inline-block;vertical-align:-3px;flex-shrink:0;margin-right:5px;pointer-events:none}
+.compact-card h3{display:flex;align-items:flex-start;gap:8px}
+.compact-card h3>a{min-width:0;flex:1}
+.compact-card h3>a>.ui-icon{width:12px;height:12px;margin:0 0 0 3px}
+.content-icon{display:flex;align-items:center;justify-content:center;flex:0 0 24px;width:24px;height:24px;border-radius:5px;background:#e6eff6;color:#1d577a}
+.content-icon>.ui-icon{margin:0;width:16px;height:16px}
+.content-icon-patient{background:#dff3ed;color:#216955}
+.content-icon-news{background:#fff0da;color:#956119}
+.compact-status>.ui-icon{width:12px;height:12px;vertical-align:-2px}
+.compact-tabs .ui-icon{width:14px;height:14px}
 body[data-view=compact]{font-size:14px;background:#f5f7fa}
 [data-view=compact] .layout{grid-template-columns:184px minmax(0,1fr)}
 [data-view=compact] .sidebar{padding:20px 12px}

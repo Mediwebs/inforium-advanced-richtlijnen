@@ -1,3 +1,4 @@
+import {decorateCompact} from './icons.js';
 import {compactCard,compactSearch,sourceUrl} from './compact.js';
 import {refineResults,kindOf} from './refine.js';
 import {decodePznl} from './pznl.js';
@@ -147,6 +148,7 @@ function render(){
  $('#board-count').textContent=selected.size;
  if(compactMode){
   $('#compact-sources-label').textContent='Bronnen · '+searchCollections.size+' van '+Object.keys(SOURCE_COLLECTIONS).length+' geselecteerd';
+  decorateCompact();
   if(page!=='zoeken'){const nodes=[...document.querySelectorAll('#main > .notice, #main > .stats, #main > .heading .intro')];if(nodes.length){const details=document.createElement('details');details.className='compact-page-info';details.innerHTML='<summary>Toelichting en bronstatus</summary>';nodes.forEach(n=>details.append(n));$('#main .heading')?.after(details);}}
  }
 }
@@ -165,7 +167,7 @@ function showResource(id){
  html+='<div class="notice">'+(a.record_type==='navigation_only'?'Uitsluitend bronnavigatie; geen zelfstandige diagnostische beslisregel.':'Deze kaart beschrijft een bronpassage, niet wat bij een individuele patiënt moet gebeuren.')+'</div><dl><dt>Inforium Notes · toepassingsgebied van de bron</dt><dd>'+(a.applicability.any_of.map(g=>g.all_of.map(c=>esc(labels[c.field]||c.field)).join(' én ')).filter(Boolean).join(' OF ') || 'Niet als zelfstandig criterium gemodelleerd')+'</dd><dt>Uitsluitingen</dt><dd>Niet volledig geïnventariseerd. Geen claim van volledige toepasbaarheid.</dd><dt>Bronsectie</dt><dd>'+esc(a.source_section)+'</dd><dt>Officiële aanbeveling</dt><dd>Lees in de oorspronkelijke module; niet volledig overgenomen.</dd><dt>Onderbouwing en overwegingen</dt><dd>Afzonderlijke secties in de bron. Lees samen met de aanbeveling.</dd><dt>Aanbevelingsmodaliteit in overdracht</dt><dd>'+esc({do:'Doen · beperkte redactionele interpretatie',not_applicable:'Niet van toepassing'}[a.modality]||a.modality)+'</dd><dt>Bewijszekerheid</dt><dd>Niet vastgelegd in het actierecord; geen GRADE-niveau toegekend.</dd><dt>Redactionele notitie</dt><dd>'+esc(a.review_note)+'</dd><dt>Publicatie / geldigheid beoordeeld</dt><dd>'+date(s.published_at)+' / '+date(s.validity_assessed_at)+'</dd><dt>Raadpleging in overdracht</dt><dd>'+date(s.checked_at)+'</dd></dl>'+external(s.url,'Open oorspronkelijke module','source-link')+'<p class="muted">Opent de bron niet? De status is dan onbekend; behoud de laatste controledatum en laat de bron opnieuw controleren.</p>';
  }
  showDialog(html);
- if(compactMode){const url=sourceUrl(r);$('#detail-body').querySelectorAll('a.source-link').forEach(a=>a.remove());if(url)$('#detail-body .dialog-top').insertAdjacentHTML('afterend',external(url,'Open oorspronkelijke bron','source-link compact-source-top'));const hit=compactHits.get(id);if(hit&&(hit.total||hit.refinementMatches?.length)&&location.hash==='#zoeken')$('#detail-body').insertAdjacentHTML('beforeend',searchReason(hit));}
+ if(compactMode){const url=sourceUrl(r);$('#detail-body').querySelectorAll('a.source-link').forEach(a=>a.remove());if(url)$('#detail-body .dialog-top').insertAdjacentHTML('afterend',external(url,'Open oorspronkelijke bron','source-link compact-source-top'));decorateCompact();const hit=compactHits.get(id);if(hit&&(hit.total||hit.refinementMatches?.length)&&location.hash==='#zoeken')$('#detail-body').insertAdjacentHTML('beforeend',searchReason(hit));}
 }
 document.addEventListener('click',event=>{
  if(compactMode){const row=event.target.closest('[data-detail-card]');if(row&&!event.target.closest('a,button,input,select,summary')){showResource(row.dataset.detailCard);return;}}
