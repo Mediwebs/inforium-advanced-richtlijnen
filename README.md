@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.9
+# Inforium CHIPboard v0.10
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -8,7 +8,7 @@ Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbrei
 
 Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met algemene trefwoorden; geen dossiers of gegenereerde medische antwoorden.
 
-[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 4.938 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
+[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 9.301 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
 
 ## PZNL en bronselectie v0.5
 
@@ -24,7 +24,7 @@ Filter op soort informatie, doelgroep, vakgebied en toegangsstatus. Alle aanvull
 
 ## Geïntegreerde Inforium-werkplek
 
-[Open Inforium Advanced × CHIPboard](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start). Een derde prototype in de groene Inforium-stijl, met gezamenlijk zoeken, patiënteninformatie, nieuws en een werkmap. Bevat dezelfde 4.938 bronkaarten plus 15 expliciet gemarkeerde ontwerpvoorbeelden. Een informatiepakket toont uitsluitend echte patiëntenbronlinks; er wordt niets verzonden. [Werking, herkomst en vervolgintegratie](docs/INTEGRATED.md).
+[Open Inforium Advanced × CHIPboard](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start). Een derde prototype in de groene Inforium-stijl, met gezamenlijk zoeken, patiënteninformatie, nieuws en een werkmap. Bevat dezelfde 9.301 bronkaarten plus 15 expliciet gemarkeerde ontwerpvoorbeelden. Een informatiepakket toont uitsluitend echte patiëntenbronlinks; er wordt niets verzonden. [Werking, herkomst en vervolgintegratie](docs/INTEGRATED.md).
 
 ## NHG en NCJ / JGZ v0.9
 
@@ -93,6 +93,24 @@ GitHub Actions valideert, test en bouwt bij een push naar main, en publiceert di
 
 [Bouwdocument in het AI-documentenarchief](https://docs.google.com/document/d/1EbProqNrQdAepnqv-9Iahd9nGj1eqGr9E45ijb6NO-k/edit).
 
+## Patiënteninformatie uit CSV — v0.10
+
+De vijf aangeleverde exports van 5 oktober 2026 zijn toegevoegd als afzonderlijke broncollecties in alle drie interfaces. 4.654 exportregels zijn samengevoegd tot 4.363 kaarten op basis van dezelfde URL binnen dezelfde collectie; 291 dubbele vermeldingen behouden hun oorspronkelijke titels, bron-ID's en zoektrefwoorden. Geen samenvoeging tussen verschillende uitgevers.
+
+| Collectie | Exportregels | Kaarten | Link controleren |
+|---|---:|---:|---:|
+| GroeiGids | 1.103 | 1.081 | 43 |
+| Kanker.nl | 285 | 284 | 0 |
+| KNO (V2) | 111 | 107 | 0 |
+| Thuisarts | 2.354 | 2.090 | 1 |
+| Voedingscentrum | 801 | 801 | 0 |
+
+De 44 gemarkeerde kaarten blijven zoekbaar, maar hebben geen actieve bronlink en worden niet opgenomen in informatiepakketten: één ontbrekende GroeiGids-link, 42 unieke GroeiGids-links met een vraagteken in het artikelpad en één afwijkend Thuisarts-domein. Andere links zijn uit de export overgenomen; er is geen volledige bereikbaarheids- of inhoudscontrole uitgevoerd.
+
+CSV zonder kopregels: kolom 1 bron-ID, 3 URL, 4 titel, 5 bronlabel, 11 zoektrefwoorden en 18 oorspronkelijk taallabel. Onbekende numerieke categorieën zijn niet vertaald naar medische kenmerken. Taalmetadata is alleen als oorspronkelijke variant bewaard, omdat sommige Engelstalige labels Nederlandse titels en links hebben. GroeiGids, KNO en Voedingscentrum zijn als Windows-1252 gelezen; de andere twee als UTF-8. Eén onbeschermde HTML-entiteit &apos; in een Voedingscentrum-PDF-link veroorzaakte 28 kolommen en is hersteld naar het apostrofteken. Oorspronkelijke linkwaarde blijft bewaard. Interne importnotities en beheertags zijn niet gepubliceerd.
+
+Bronbestanden: data_Groeigids_05-10-2026.csv, data_Kanker.nl_05-10-2026.csv, data_KNO (V2)_05-10-2026.csv, data_Thuisarts_05-10-2026.csv en data_Voedingscentrum_05-10-2026.csv. Aangeleverd door de gebruiker vanuit Mijn Drive/000temp. Bestandshashes, aantallen en rijherkomst staan in data/patient-sources.json; validatie in src/patient-sources.js. Exportdatum en importdatum zijn geen publicatie- of geldigheidsdatum. Originele bestanden blijven ongewijzigd.
+
 ## Herkomst
 
 - Aangemaakt: 2026-10-04; laatst bijgewerkt: 2026-10-05.
@@ -101,4 +119,4 @@ GitHub Actions valideert, test en bouwt bij een push naar main, en publiceert di
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.9; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.10; niet klinisch gevalideerd.

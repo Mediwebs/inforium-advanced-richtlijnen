@@ -9,7 +9,7 @@ export function contentTypeOf(r){
 }
 export const sourceUrl=r=>r.demo?null:r.url||r.source?.url||null;
 export function compactCard(r,selected,hit,{boardLabel='Chipboard'}={}){
- const url=sourceUrl(r),status=r.demo?'Demonstratie':r.locked?'Mogelijk inloggen':r.groningen?'Inventaris 03-10-2026':'Bronverwijzing';
+ const url=sourceUrl(r),status=r.link_review?'Link controleren':r.patientImport?'Export 05-10-2026':r.demo?'Demonstratie':r.locked?'Mogelijk inloggen':r.groningen?'Inventaris 03-10-2026':'Bronverwijzing';
  return '<article class="compact-card" data-detail-card="'+esc(r.id)+'"><h3><span class="content-icon content-icon-'+contentTypeOf(r)+'">'+icon(contentTypeOf(r))+'</span>'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" title="'+esc(r.title)+' — open oorspronkelijke bron">'+esc(r.title)+' '+icon('external')+'</a>':esc(r.title))+'</h3><div class="compact-meta">'+esc(SOURCE_COLLECTIONS[collectionOf(r)]||r.owner)+' · '+esc(kindOf(r))+'</div><div class="compact-card-bottom"><span class="compact-status">'+(r.locked?icon('lock'):'')+esc(status)+(hit?.total?' · '+hit.matched+'/'+hit.total+' trefwoorden':'')+'</span><div class="actions"><button data-open="'+esc(r.id)+'" aria-label="Details: '+esc(r.title)+'">'+icon('info')+'Details</button><button data-pin="'+esc(r.id)+'" class="'+(selected.has(r.id)?'saved':'')+'" aria-label="'+(selected.has(r.id)?'Verwijder van':'Voeg toe aan')+' '+esc(boardLabel)+': '+esc(r.title)+'">'+(selected.has(r.id)?icon('check')+'Bewaard':icon('bookmark')+esc(boardLabel))+'</button></div></div></article>';
 }
 export function compactSearch(state,{card,options,specialties}){
