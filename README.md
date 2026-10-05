@@ -18,6 +18,10 @@ Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met 
 
 Filter op soort informatie, doelgroep, vakgebied en toegangsstatus. Alle aanvullende trefwoorden moeten binnen het bestaande resultaat voorkomen. Sorteer op overeenkomst, broncollectie, alfabet of geopende bronkaarten in deze sessie. Deze gebruikstelling is niet algemeen, wordt niet bewaard of verzonden en reset bij herladen. [Werking en verificatie](docs/V0.6.md).
 
+## Parallelle compacte versie
+
+[Open CHIPboard Compact](https://mediwebs.github.io/inforium-advanced-richtlijnen/compact.html#zoeken). De uitgebreide versie blijft beschikbaar op index.html. Beide gebruiken dezelfde bronbestanden en zoeklogica; sessieselecties worden niet tussen vensters overgedragen. De compacte variant toont bronlinks bovenaan, korte kaarten en details op aanvraag. [Ontwerp en aansluitroute voor Inforium Advanced](docs/COMPACT.md).
+
 ## Gebruiken
 
 Selecteer vakgebied, onderwerp, taak en brontype. Open een bronkaart voor herkomst en brondata. Voeg kaarten toe aan Mijn Chipboard om ze naast elkaar te bekijken. Zet de demonstratie van andere bronlagen aan om lokale, regionale/transmurale, patiënten- en sociaal-domeinkaarten te proberen. Deze vier kaarten bevatten **geen echte afspraken of informatie**.

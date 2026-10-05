@@ -1,8 +1,11 @@
+import {compactCard,compactSearch,sourceUrl} from './compact.js';
 import {refineResults,kindOf} from './refine.js';
 import {decodePznl} from './pznl.js';
 import {buildSearchIndex,searchResources,SOURCE_COLLECTIONS,collectionOf} from './search.js';
 import {decodeGroningen,filterGroningen,groningenKinds} from './groningen.js';
 import {filterResources, validateManifest, stageUpdate} from './core.js';
+const compactMode=document.body.dataset.view==='compact';
+let compactType='',compactFiltersOpen=false,compactHits=new Map();
 const $ = selector => document.querySelector(selector);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = s => s ? new Intl.DateTimeFormat('nl-NL',{dateStyle:'medium',timeZone:'UTC'}).format(new Date(s)) : 'Niet vastgelegd';
@@ -29,7 +32,7 @@ function makeResources(){
  return [...real,...added,...examples];
 }
 function heading(kicker,title,description,extra=''){return '<div class="heading"><div><div class="eyebrow">'+kicker+'</div><h1>'+title+'</h1><p class="intro">'+description+'</p></div>'+extra+'</div>';}
-function card(r,board=false,hit=null){return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.pznl?esc(r.kind)+' · bronverwijzing':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div>'+(hit?searchReason(hit):'')+'<div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
+function card(r,board=false,hit=null){if(compactMode)return compactCard(r,selected,hit);return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.pznl?esc(r.kind)+' · bronverwijzing':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div>'+(hit?searchReason(hit):'')+'<div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
 function options(dict,current,all){return '<option value="">'+all+'</option>'+Object.entries(dict).map(([v,label])=>'<option value="'+v+'" '+(current===v?'selected':'')+'>'+label+'</option>').join('');}
 function library(){
  const found=filterResources(resources.filter(r=>!r.groningen&&!r.pznl),filters);
@@ -94,6 +97,7 @@ const refinement={extra:'',kind:'',audience:'',specialty:'',access:'',sort:'rele
 let lastOpened=null;
 let searchIndex=[],searchQuery='',searchPage=0,searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS)),searchComplete=false;
 function searchPageView(){
+ if(compactMode){const result=compactSearch({index:searchIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:compactType,filtersOpen:compactFiltersOpen},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return result.html;}
  const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete});
  const refined=refineResults(searchIndex,response.results,refinement,usage),rows=refined.results;
  const kinds=Object.fromEntries([...new Set(searchIndex.map(x=>kindOf(x.record)))].sort((a,b)=>a.localeCompare(b,'nl')).map(k=>[k,k]));
@@ -134,12 +138,17 @@ document.addEventListener('submit',e=>{
 });
 
 function render(){
- const page=location.hash.slice(1)||'bibliotheek';
+ if(compactMode&&document.querySelector('#compact-filters'))compactFiltersOpen=document.querySelector('#compact-filters').open;
+ const page=location.hash.slice(1)||(compactMode?'zoeken':'bibliotheek');
  $('#source-collections').innerHTML='<legend>Welke bronnen wil je doorzoeken?</legend><div class="source-options">'+Object.entries(SOURCE_COLLECTIONS).map(([id,label])=>'<label><input type="checkbox" data-collection="'+id+'" '+(searchCollections.has(id)?'checked':'')+'> <span>'+esc(label)+' <small>('+searchIndex.filter(x=>collectionOf(x.record)===id).length+')</small></span></label>').join('')+'</div><div class="actions"><button type="button" id="sources-all">Alle bronnen</button><button type="button" id="sources-none">Geen bronnen</button></div>';
  const views={zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
  $('#main').innerHTML=(views[page]||library)();
  document.querySelectorAll('[data-nav]').forEach(a=>{const active=a.dataset.nav===page; a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  $('#board-count').textContent=selected.size;
+ if(compactMode){
+  $('#compact-sources-label').textContent='Bronnen · '+searchCollections.size+' van '+Object.keys(SOURCE_COLLECTIONS).length+' geselecteerd';
+  if(page!=='zoeken'){const nodes=[...document.querySelectorAll('#main > .notice, #main > .stats, #main > .heading .intro')];if(nodes.length){const details=document.createElement('details');details.className='compact-page-info';details.innerHTML='<summary>Toelichting en bronstatus</summary>';nodes.forEach(n=>details.append(n));$('#main .heading')?.after(details);}}
+ }
 }
 function showDialog(html){$('#detail-body').innerHTML=html;$('#detail').showModal();}
 function showResource(id){
@@ -156,12 +165,15 @@ function showResource(id){
  html+='<div class="notice">'+(a.record_type==='navigation_only'?'Uitsluitend bronnavigatie; geen zelfstandige diagnostische beslisregel.':'Deze kaart beschrijft een bronpassage, niet wat bij een individuele patiënt moet gebeuren.')+'</div><dl><dt>Inforium Notes · toepassingsgebied van de bron</dt><dd>'+(a.applicability.any_of.map(g=>g.all_of.map(c=>esc(labels[c.field]||c.field)).join(' én ')).filter(Boolean).join(' OF ') || 'Niet als zelfstandig criterium gemodelleerd')+'</dd><dt>Uitsluitingen</dt><dd>Niet volledig geïnventariseerd. Geen claim van volledige toepasbaarheid.</dd><dt>Bronsectie</dt><dd>'+esc(a.source_section)+'</dd><dt>Officiële aanbeveling</dt><dd>Lees in de oorspronkelijke module; niet volledig overgenomen.</dd><dt>Onderbouwing en overwegingen</dt><dd>Afzonderlijke secties in de bron. Lees samen met de aanbeveling.</dd><dt>Aanbevelingsmodaliteit in overdracht</dt><dd>'+esc({do:'Doen · beperkte redactionele interpretatie',not_applicable:'Niet van toepassing'}[a.modality]||a.modality)+'</dd><dt>Bewijszekerheid</dt><dd>Niet vastgelegd in het actierecord; geen GRADE-niveau toegekend.</dd><dt>Redactionele notitie</dt><dd>'+esc(a.review_note)+'</dd><dt>Publicatie / geldigheid beoordeeld</dt><dd>'+date(s.published_at)+' / '+date(s.validity_assessed_at)+'</dd><dt>Raadpleging in overdracht</dt><dd>'+date(s.checked_at)+'</dd></dl>'+external(s.url,'Open oorspronkelijke module','source-link')+'<p class="muted">Opent de bron niet? De status is dan onbekend; behoud de laatste controledatum en laat de bron opnieuw controleren.</p>';
  }
  showDialog(html);
+ if(compactMode){const url=sourceUrl(r);$('#detail-body').querySelectorAll('a.source-link').forEach(a=>a.remove());if(url)$('#detail-body .dialog-top').insertAdjacentHTML('afterend',external(url,'Open oorspronkelijke bron','source-link compact-source-top'));const hit=compactHits.get(id);if(hit&&(hit.total||hit.refinementMatches?.length)&&location.hash==='#zoeken')$('#detail-body').insertAdjacentHTML('beforeend',searchReason(hit));}
 }
 document.addEventListener('click',event=>{
+ if(compactMode){const row=event.target.closest('[data-detail-card]');if(row&&!event.target.closest('a,button,input,select,summary')){showResource(row.dataset.detailCard);return;}}
  const button=event.target.closest('button');if(!button)return;
+ if(button.hasAttribute('data-content-type')){compactType=button.dataset.contentType;searchPage=0;render();$('[data-content-type="'+compactType+'"]').focus();}
  if(button.hasAttribute('data-pznl')){searchCollections=new Set(['palliaweb','pznl-patient']);searchQuery='palliatieve zorg';$('#global-query').value=searchQuery;searchPage=0;location.hash='zoeken';render();}
  if(button.id==='sources-all'||button.id==='sources-none'){searchCollections=button.id==='sources-all'?new Set(Object.keys(SOURCE_COLLECTIONS)):new Set();searchPage=0;render();$('#'+button.id).focus();}
- if(button.id==='refine-reset'){Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
+ if(button.id==='refine-reset'){if(compactMode){compactType='';searchComplete=false;}Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
  if(button.id==='search-clear'){searchQuery='';$('#global-query').value='';searchPage=0;render();$('#global-query').focus();}
  if(button.id==='search-prev'||button.id==='search-next'){searchPage+=button.id==='search-next'?1:-1;render();$('#main').focus();}
  if(button.dataset.related){$('#detail').close();showResource(button.dataset.related);}
@@ -187,6 +199,7 @@ document.addEventListener('change',e=>{
  if(e.target.id==='demo'){filters.demo=e.target.checked;render();$('#demo').focus();}
 });
 $('#detail').addEventListener('close',()=>{if(location.hash==='#zoeken'&&lastOpened){const id=lastOpened;lastOpened=null;render();$('[data-open="'+id+'"]')?.focus();}});
+document.addEventListener('toggle',e=>{if(e.target.id==='compact-filters'&&e.target.isConnected)compactFiltersOpen=e.target.open;},true);
 window.addEventListener('hashchange',()=>{render();$('#main').focus();});
 try {
  [sources,actions,modules,catalog,groningenPayload,pznlPayload]=await Promise.all([read('./data/bronnen.json'),read('./data/voorbeeldacties.json'),read('./data/modules.json'),read('./data/catalogus.json'),read('./data/groningen.json'),read('./data/pznl.json')]);

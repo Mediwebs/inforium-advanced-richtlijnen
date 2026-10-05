@@ -23,4 +23,13 @@ if(groningen.length!==4627)throw new Error('Inventarisaantal wijkt af van geimpo
 console.log('Groningen:',groningen.length,'metadatarecords uit 2026-10-03');
 await fs.mkdir('dist',{recursive:true});
 for(const p of ['index.html','favicon.svg','src','data'])await fs.cp(p,'dist/'+p,{recursive:true});
+const compact=(await fs.readFile('index.html','utf8'))
+ .replace('<body>','<body data-view="compact">')
+ .replace('</head>','<link rel="stylesheet" href="./src/compact.css"></head>')
+ .replace('<title>CHIPboard · Inforium bronnenwerkplek</title>','<title>CHIPboard Compact · Inforium</title>')
+ .replace('PROTOTYPE · V0.6','COMPACT · PARALLEL')
+ .replace('<fieldset id="source-collections"></fieldset>','<details class="compact-sources"><summary id="compact-sources-label">Bronnen kiezen</summary><fieldset id="source-collections"></fieldset></details>')
+ .replace('Bronnavigatie · zonder patiëntinvoer','Compact · geen patiëntgegevens')
+ .replace('class="compact-version-link" href="./compact.html#zoeken">Compacte versie','class="compact-version-link" href="./index.html#zoeken">Uitgebreide versie');
+await fs.writeFile('dist/compact.html',compact);
 console.log('Build OK:',sources.length,'bronnen;',actions.length,'records;',new Set(actions.map(a=>a.source_id)).size,'oorspronkelijke modules;',catalog.length,'aanvullende bronkaarten.');
