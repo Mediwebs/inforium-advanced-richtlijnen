@@ -1,4 +1,6 @@
 import {decodePznl} from '../src/pznl.js';
+import {decodeInforium} from '../src/integrated.js';
+import {integratedShell} from './integrated-shell.mjs';
 import {decodeGroningen} from '../src/groningen.js';
 import fs from 'node:fs/promises';
 import Ajv from 'ajv/dist/2020.js';
@@ -18,6 +20,7 @@ for(const a of actions){if(!validate(a))throw new Error(JSON.stringify(validate.
 for(const s of sources){if(new URL(s.url).protocol!=='https:')throw new Error('Onveilige bronlink');}
 modules.forEach(validateManifest);
 const pznl=decodePznl(await read('data/pznl.json'));console.log('PZNL:',pznl.length,'metadatarecords');
+console.log('Inforium:',decodeInforium(await read('data/inforium-examples.json')).length,'gemarkeerde ontwerpvoorbeelden');
 const groningen=decodeGroningen(await read('data/groningen.json'));
 if(groningen.length!==4627)throw new Error('Inventarisaantal wijkt af van geimporteerde versie');
 console.log('Groningen:',groningen.length,'metadatarecords uit 2026-10-03');
@@ -32,4 +35,5 @@ const compact=(await fs.readFile('index.html','utf8'))
  .replace('Bronnavigatie · zonder patiëntinvoer','Compact · geen patiëntgegevens')
  .replace('class="compact-version-link" href="./compact.html#zoeken">Compacte versie','class="compact-version-link" href="./index.html#zoeken">Uitgebreide versie');
 await fs.writeFile('dist/compact.html',compact);
+await fs.writeFile('dist/integrated.html',integratedShell(compact));
 console.log('Build OK:',sources.length,'bronnen;',actions.length,'records;',new Set(actions.map(a=>a.source_id)).size,'oorspronkelijke modules;',catalog.length,'aanvullende bronkaarten.');

@@ -1,3 +1,4 @@
+import {decodeInforium,integratedCard,integratedHome,inforiumDetails,packagePreview} from './integrated.js';
 import {decorateCompact} from './icons.js';
 import {compactCard,compactSearch,sourceUrl} from './compact.js';
 import {refineResults,kindOf} from './refine.js';
@@ -6,11 +7,14 @@ import {buildSearchIndex,searchResources,SOURCE_COLLECTIONS,collectionOf} from '
 import {decodeGroningen,filterGroningen,groningenKinds} from './groningen.js';
 import {filterResources, validateManifest, stageUpdate} from './core.js';
 const compactMode=document.body.dataset.view==='compact';
+const integratedMode=document.body.dataset.experience==='inforium';
+if(integratedMode)SOURCE_COLLECTIONS.inforium='Inforium Advanced · voorbeelden';
+let inforiumRecords=[],iaAge='';
 let compactType='',compactFiltersOpen=false,compactHits=new Map();
 const $ = selector => document.querySelector(selector);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = s => s ? new Intl.DateTimeFormat('nl-NL',{dateStyle:'medium',timeZone:'UTC'}).format(new Date(s)) : 'Niet vastgelegd';
-const layers = {pznl:'PZNL · Palliatieve zorg',groningen:'Groningen · broninventaris',national:'Landelijke richtlijn',local:'Lokale afspraak',regional:'Regionaal / transmuraal',patient:'Patiënteninformatie',social:'Sociaal domein'};
+const layers = {inforium:'Inforium · ontwerpvoorbeeld',pznl:'PZNL · Palliatieve zorg',groningen:'Groningen · broninventaris',national:'Landelijke richtlijn',local:'Lokale afspraak',regional:'Regionaal / transmuraal',patient:'Patiënteninformatie',social:'Sociaal domein'};
 const specialties = {kno:'KNO',cardiologie:'Cardiologie',oncologie:'Oncologie',radiotherapie:'Radiotherapie'};
 const topics = {neus:'Neusklachten',duizeligheid:'Duizeligheid',gehoor:'Gehoorverlies','hoofd-hals':'Hoofd-halstumoren',atriumfibrilleren:'Atriumfibrilleren',hartrevalidatie:'Hartrevalidatie',borstkanker:'Borstkanker',longkanker:'Longcarcinoom'};
 const tasks = {overview:'Richtlijnoverzicht',history:'Anamnese',diagnostics:'Diagnostiek',referral:'Verwijzen & samenwerken',shared_decision:'Informeren & samen beslissen',followup:'Opvolgen',urgency:'Urgentie',examination:'Lichamelijk onderzoek',treatment:'Behandeling'};
@@ -33,7 +37,7 @@ function makeResources(){
  return [...real,...added,...examples];
 }
 function heading(kicker,title,description,extra=''){return '<div class="heading"><div><div class="eyebrow">'+kicker+'</div><h1>'+title+'</h1><p class="intro">'+description+'</p></div>'+extra+'</div>';}
-function card(r,board=false,hit=null){if(compactMode)return compactCard(r,selected,hit);return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.pznl?esc(r.kind)+' · bronverwijzing':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div>'+(hit?searchReason(hit):'')+'<div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
+function card(r,board=false,hit=null){if(integratedMode)return integratedCard(r,selected,hit);if(compactMode)return compactCard(r,selected,hit);return '<article class="card '+(r.layer==='social'?'social':r.layer==='patient'?'patient':r.layer!=='national'?'local':'')+'"><div><span class="badge '+(r.demo?'demo':'')+'">'+esc(layers[r.layer])+'</span></div><h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.owner)+'</div><p>'+esc(r.description)+'</p><div class="card-bottom"><div class="tags">'+[...(r.specialties||[]).map(k=>'<span>'+specialties[k]+'</span>')].join('')+r.tasks.map(t=>'<span>'+tasks[t]+'</span>').join('')+'</div><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie · geen broninhoud':r.pznl?esc(r.kind)+' · bronverwijzing':r.groningen?(r.locked?'Alleen metadata · mogelijk inloggen':'Inventaris 03-10-2026 · bronverwijzing'):r.navigation?(r.source_kind==='overview'?'Richtlijnoverzicht · bronverwijzing':'Richtlijnmodule · bronverwijzing'):'Redactioneel te beoordelen')+'</span><div class="actions"><button data-open="'+r.id+'">Bekijk bronkaart</button><button data-pin="'+r.id+'" class="'+(selected.has(r.id)?'saved':'')+'">'+(selected.has(r.id)?'✓ Op Chipboard':'+ Chipboard')+'</button></div>'+(hit?searchReason(hit):'')+'<div class="match">'+(board?'Afzonderlijke bron · '+esc(r.version):'Bronnavigatie · geen beoordeling van patiëntgeschiktheid.')+'</div></div></article>';}
 function options(dict,current,all){return '<option value="">'+all+'</option>'+Object.entries(dict).map(([v,label])=>'<option value="'+v+'" '+(current===v?'selected':'')+'>'+label+'</option>').join('');}
 function library(){
  const found=filterResources(resources.filter(r=>!r.groningen&&!r.pznl),filters);
@@ -45,6 +49,7 @@ function library(){
 }
 function board(){
  const rows=resources.filter(r=>selected.has(r.id));
+ if(integratedMode)return '<div class="ia-section-title"><div><p class="ia-eyebrow">MIJN WERKPLEK</p><h1>Mijn werkmap</h1></div><button id="clear-board">Maak leeg</button></div><p class="ia-caption">'+rows.length+' bewaarde kaarten · alleen in deze sessie. Richtlijnen en patiënteninformatie blijven afzonderlijke bronnen.</p><div class="actions ia-map-actions"><a href="#patienten">Patiënteninformatie toevoegen</a><button id="ia-package">Voorbeeld informatiepakket</button></div><div class="compact-grid">'+(rows.length?rows.map(r=>card(r,true)).join(''):'<div class="empty">Bewaar kaarten via de knop Werkmap.</div>')+'</div>';
  return heading('MIJN CHIPBOARD','Verschillende bronnen. Eén werkplek.','Zet bronnen naast elkaar voor je eigen overzicht. Er wordt geen gezamenlijk medisch advies van gemaakt.','<button id="clear-board">Maak bord leeg</button>')+
  '<div class="notice">Dit bord bestaat alleen zolang deze pagina openstaat. Het bevat bronverwijzingen; geen dossiers, notities of patiëntgegevens.</div>'+
  '<div class="section-row"><h2>Naast elkaar</h2><span class="count">'+rows.length+' geselecteerde bronnen</span></div><div class="board-grid">'+(rows.length?rows.map(r=>card(r,true)).join(''):'<div class="empty"><h3>Maak je eerste bronnenoverzicht</h3><p>Kies in de bronnenwerkplek “+ Chipboard”. Zet eventueel de demonstratie van andere bronlagen aan.</p><a href="#bibliotheek">Naar de bronnenwerkplek</a></div>')+'</div>'+
@@ -98,7 +103,9 @@ const refinement={extra:'',kind:'',audience:'',specialty:'',access:'',sort:'rele
 let lastOpened=null;
 let searchIndex=[],searchQuery='',searchPage=0,searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS)),searchComplete=false;
 function searchPageView(){
- if(compactMode){const result=compactSearch({index:searchIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:compactType,filtersOpen:compactFiltersOpen},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return result.html;}
+ const route=location.hash.slice(1),iaType=route==='patienten'?'patient':route==='nieuws'?'news':compactType;
+ const currentIndex=integratedMode&&iaAge?searchIndex.filter(x=>x.record.inforium&&x.record.age===iaAge):searchIndex;
+ if(compactMode){const result=compactSearch({index:currentIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:integratedMode?iaType:compactType,filtersOpen:compactFiltersOpen,integrated:integratedMode},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return (integratedMode?'<div class="ia-library-note">'+(route==='nieuws'?'Nieuws uit de bestaande inventaris en duidelijk gemarkeerde voorbeelden; geen actuele nieuwsfeed.':'Echte bronverwijzingen en herkenbare Inforium-ontwerpvoorbeelden in één overzicht.')+(iaAge?' <strong>Leeftijdslabel voorbeelden: '+esc(iaAge)+'</strong> <button id="ia-age-clear">Wis leeftijd</button>':'')+'</div>':'')+result.html;}
  const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete});
  const refined=refineResults(searchIndex,response.results,refinement,usage),rows=refined.results;
  const kinds=Object.fromEntries([...new Set(searchIndex.map(x=>kindOf(x.record)))].sort((a,b)=>a.localeCompare(b,'nl')).map(k=>[k,k]));
@@ -140,9 +147,9 @@ document.addEventListener('submit',e=>{
 
 function render(){
  if(compactMode&&document.querySelector('#compact-filters'))compactFiltersOpen=document.querySelector('#compact-filters').open;
- const page=location.hash.slice(1)||(compactMode?'zoeken':'bibliotheek');
+ const page=location.hash.slice(1)||(integratedMode?'start':compactMode?'zoeken':'bibliotheek');
  $('#source-collections').innerHTML='<legend>Welke bronnen wil je doorzoeken?</legend><div class="source-options">'+Object.entries(SOURCE_COLLECTIONS).map(([id,label])=>'<label><input type="checkbox" data-collection="'+id+'" '+(searchCollections.has(id)?'checked':'')+'> <span>'+esc(label)+' <small>('+searchIndex.filter(x=>collectionOf(x.record)===id).length+')</small></span></label>').join('')+'</div><div class="actions"><button type="button" id="sources-all">Alle bronnen</button><button type="button" id="sources-none">Geen bronnen</button></div>';
- const views={zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
+ const views={...(integratedMode?{start:()=>integratedHome(resources,selected),patienten:searchPageView,nieuws:searchPageView}:{}),zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
  $('#main').innerHTML=(views[page]||library)();
  document.querySelectorAll('[data-nav]').forEach(a=>{const active=a.dataset.nav===page; a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  $('#board-count').textContent=selected.size;
@@ -157,7 +164,8 @@ function showResource(id){
  const r=resources.find(r=>r.id===id); if(!r)return;
  if(!r.demo){usage.set(id,(usage.get(id)||0)+1);lastOpened=id;}
  let html='<div class="dialog-top"><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie':'Redactioneel te beoordelen')+'</span><button class="close" data-close>Sluiten ✕</button></div><h2 id="detail-title">'+esc(r.title)+'</h2><p>'+esc(r.description)+'</p>';
- if(r.pznl){html+='<dl><dt>Broncollectie</dt><dd>'+esc(SOURCE_COLLECTIONS[r.collection])+'</dd><dt>Type</dt><dd>'+esc(r.kind)+'</dd><dt>Titel en link geraadpleegd</dt><dd>'+date(r.checked_at)+'</dd><dt>Laatst gewijzigd volgens het bronoverzicht</dt><dd>'+date(r.index_updated_at)+'</dd><dt>Geldigheid inhoudelijk beoordeeld</dt><dd>Niet vastgesteld; overzichtsdatum is geen geldigheidsbeoordeling.</dd><dt>Herkomst</dt><dd>'+external(r.provenance_url,'Bron van deze metadata')+'</dd><dt>Hergebruik</dt><dd>'+esc(r.rights)+'</dd></dl><p>Alleen bronnavigatie. Geen volledige tekst of automatisch behandeladvies. Het kwaliteitskader kan naar de vernieuwde website doorverwijzen; de datum uit het overzicht kan daarvan afwijken.</p>'+external(r.url,'Open oorspronkelijke bron','source-link');}
+ if(r.inforium){html+=inforiumDetails(r);}
+ else if(r.pznl){html+='<dl><dt>Broncollectie</dt><dd>'+esc(SOURCE_COLLECTIONS[r.collection])+'</dd><dt>Type</dt><dd>'+esc(r.kind)+'</dd><dt>Titel en link geraadpleegd</dt><dd>'+date(r.checked_at)+'</dd><dt>Laatst gewijzigd volgens het bronoverzicht</dt><dd>'+date(r.index_updated_at)+'</dd><dt>Geldigheid inhoudelijk beoordeeld</dt><dd>Niet vastgesteld; overzichtsdatum is geen geldigheidsbeoordeling.</dd><dt>Herkomst</dt><dd>'+external(r.provenance_url,'Bron van deze metadata')+'</dd><dt>Hergebruik</dt><dd>'+esc(r.rights)+'</dd></dl><p>Alleen bronnavigatie. Geen volledige tekst of automatisch behandeladvies. Het kwaliteitskader kan naar de vernieuwde website doorverwijzen; de datum uit het overzicht kan daarvan afwijken.</p>'+external(r.url,'Open oorspronkelijke bron','source-link');}
  else if(r.groningen){html+=groningenDetails(r);}
  else if(r.navigation){html+='<div class="notice">Alleen bronnavigatie. Geen samenvatting, behandeladvies of professionele inhoudelijke goedkeuring.</div><dl><dt>Type pagina</dt><dd>'+esc(r.source_kind==='overview'?'Richtlijnoverzicht; onderliggende modules niet automatisch opgenomen':'Afzonderlijke richtlijnmodule')+'</dd><dt>Vindbaar vanuit</dt><dd>'+r.specialties.map(k=>esc(specialties[k])).join(', ')+'</dd><dt>Publicatie</dt><dd>'+date(r.published_at)+'</dd><dt>Geldigheid beoordeeld volgens de bron</dt><dd>'+date(r.validity_assessed_at)+'</dd><dt>Titel, URL en metadata geraadpleegd</dt><dd>'+date(r.checked_at)+'</dd><dt>Catalogusversie</dt><dd>'+esc(r.version)+'</dd><dt>Hergebruik</dt><dd>'+esc(r.rights)+'</dd></dl>'+external(r.url,'Open oorspronkelijke bron','source-link');}
  else if(r.demo) html+='<div class="notice">Geen echte afspraak of patiënteninformatie. Dit is een invulmodel voor een toekomstige bronkoppeling.</div><dl><dt>Type</dt><dd>'+esc(layers[r.layer])+'</dd><dt>Benodigde brongegevens</dt><dd>Eigenaar, regio, doelgroep, originele URL, versie, geldigheidsperiode, hergebruikrechten en redactionele controle.</dd><dt>Relatie tot landelijke bronnen</dt><dd>Aanvulling, afwijking of procesafspraak expliciet vastleggen; nooit stilzwijgend samenvoegen.</dd></dl>';
@@ -172,10 +180,15 @@ function showResource(id){
 document.addEventListener('click',event=>{
  if(compactMode){const row=event.target.closest('[data-detail-card]');if(row&&!event.target.closest('a,button,input,select,summary')){showResource(row.dataset.detailCard);return;}}
  const button=event.target.closest('button');if(!button)return;
- if(button.hasAttribute('data-content-type')){compactType=button.dataset.contentType;searchPage=0;render();$('[data-content-type="'+compactType+'"]').focus();}
+ if(button.hasAttribute('data-content-type')){if(integratedMode){iaAge='';location.hash='zoeken';}compactType=button.dataset.contentType;searchPage=0;render();$('[data-content-type="'+compactType+'"]').focus();}
+ if(integratedMode&&button.hasAttribute('data-ia-examples')){iaAge='';searchQuery='';$('#global-query').value='';compactType=button.dataset.iaExamples;searchCollections=new Set(['inforium']);searchPage=0;location.hash='zoeken';render();}
+ if(integratedMode&&button.hasAttribute('data-ia-age')){iaAge=button.dataset.iaAge;searchQuery='';$('#global-query').value='';compactType='patient';searchCollections=new Set(['inforium']);searchPage=0;location.hash='zoeken';render();}
+ if(button.id==='ia-age-clear'){iaAge='';render();}
+ if(integratedMode&&button.hasAttribute('data-ia-knowledge')){iaAge='';searchQuery='';$('#global-query').value='';compactType='knowledge';searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS));searchPage=0;location.hash='zoeken';render();}
+ if(button.id==='ia-package'&&integratedMode)showDialog(packagePreview(resources,selected));
  if(button.hasAttribute('data-pznl')){searchCollections=new Set(['palliaweb','pznl-patient']);searchQuery='palliatieve zorg';$('#global-query').value=searchQuery;searchPage=0;location.hash='zoeken';render();}
  if(button.id==='sources-all'||button.id==='sources-none'){searchCollections=button.id==='sources-all'?new Set(Object.keys(SOURCE_COLLECTIONS)):new Set();searchPage=0;render();$('#'+button.id).focus();}
- if(button.id==='refine-reset'){if(compactMode){compactType='';searchComplete=false;}Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
+ if(button.id==='refine-reset'){iaAge='';if(compactMode){compactType='';searchComplete=false;}Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
  if(button.id==='search-clear'){searchQuery='';$('#global-query').value='';searchPage=0;render();$('#global-query').focus();}
  if(button.id==='search-prev'||button.id==='search-next'){searchPage+=button.id==='search-next'?1:-1;render();$('#main').focus();}
  if(button.dataset.related){$('#detail').close();showResource(button.dataset.related);}
@@ -183,10 +196,10 @@ document.addEventListener('click',event=>{
  if(button.id==='g-prev'||button.id==='g-next'){groningenPageIndex+=button.id==='g-next'?1:-1;render();$('#'+button.id).focus();}
  if(button.hasAttribute('data-close')) $('#detail').close();
  if(button.dataset.open)showResource(button.dataset.open);
- if(button.dataset.pin){const id=button.dataset.pin;selected.has(id)?selected.delete(id):selected.add(id);render();document.querySelector('[data-pin="'+id+'"]')?.focus();toast(selected.has(id)?'Bron toegevoegd aan je Chipboard':'Bron verwijderd van je Chipboard');}
+ if(button.dataset.pin){const id=button.dataset.pin;selected.has(id)?selected.delete(id):selected.add(id);render();document.querySelector('[data-pin="'+id+'"]')?.focus();toast((selected.has(id)?'Bron toegevoegd aan je ':'Bron verwijderd van je ')+(integratedMode?'werkmap':'Chipboard'));}
  if(button.dataset.specialty){Object.assign(filters,{specialty:button.dataset.specialty,topic:'',task:'',layer:''});location.hash='bibliotheek';render();$('#specialty').focus();}
  if(button.id==='reset'){Object.assign(filters,{specialty:'',topic:'',task:'',layer:'',demo:false});render();$('#topic').focus();}
- if(button.id==='clear-board'){selected.clear();render();$('#clear-board').focus();toast('Chipboard leeggemaakt');}
+ if(button.id==='clear-board'){selected.clear();render();$('#clear-board').focus();toast(integratedMode?'Werkmap leeggemaakt':'Chipboard leeggemaakt');}
  if(['detect','advance','reset-update'].includes(button.id)){update=stageUpdate(update,button.id==='detect'?'detect':button.id==='advance'?'advance':'reset');render();($('#advance')||$('#reset-update')).focus();}
  if(button.dataset.manifest){const m=modules.find(m=>m.id===button.dataset.manifest);showDialog('<div class="dialog-top"><span class="badge">Modulecontract v1</span><button data-close>Sluiten ✕</button></div><h2 id="detail-title">'+esc(m.name)+'</h2><p>Dit manifest beschrijft alleen de module, de vaste bestemming en toegestane functies.</p><pre>'+esc(JSON.stringify(m,null,2))+'</pre>');}
  if(button.id==='contract')showDialog('<div class="dialog-top"><span class="badge">Aansluitroute</span><button data-close>Sluiten ✕</button></div><h2 id="detail-title">Een module toevoegen</h2><ol class="scope-list"><li>Leg eigenaar, bronrechten en beoogd gebruik vast.</li><li>Voeg een manifest toe aan data/modules.json met vaste HTTPS-link en patientData: false.</li><li>Map bronmetadata naar een eigen adapter; behoud versie en herkomst.</li><li>Laat inhoud en modulecombinatie beoordelen.</li><li>Valideer, test en publiceer een nieuwe versie via GitHub.</li></ol><p>Een link is nog geen API-integratie. Uitwisseling en authenticatie vereisen aanvullende bouw en toetsing.</p>');
@@ -206,5 +219,5 @@ window.addEventListener('hashchange',()=>{render();$('#main').focus();});
 try {
  [sources,actions,modules,catalog,groningenPayload,pznlPayload]=await Promise.all([read('./data/bronnen.json'),read('./data/voorbeeldacties.json'),read('./data/modules.json'),read('./data/catalogus.json'),read('./data/groningen.json'),read('./data/pznl.json')]);
  sources=[...sources,...catalog];
- modules.forEach(validateManifest); groningenRecords=decodeGroningen(groningenPayload); pznlRecords=decodePznl(pznlPayload); resources=[...makeResources(),...groningenRecords,...pznlRecords];searchIndex=buildSearchIndex(resources,{topics,specialties,tasks,kinds:groningenKinds});render();
+ modules.forEach(validateManifest); groningenRecords=decodeGroningen(groningenPayload); pznlRecords=decodePznl(pznlPayload); resources=[...makeResources(),...groningenRecords,...pznlRecords];if(integratedMode){inforiumRecords=decodeInforium(await read('./data/inforium-examples.json'));resources.push(...inforiumRecords);}searchIndex=buildSearchIndex(resources.filter(r=>!r.demo||r.inforium),{topics,specialties,tasks,kinds:groningenKinds},{includeDemos:integratedMode});render();
 } catch(error){$('#main').innerHTML='<div class="empty"><h1>De brongegevens konden niet worden geladen.</h1><p>Er worden geen vervangende antwoorden getoond. Probeer de pagina opnieuw te laden.</p><a href="./">Opnieuw laden</a></div>';console.error(error);}

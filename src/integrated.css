@@ -1,0 +1,75 @@
+/* Inforium Advanced visual language: warm mint, orange accents, rounded cards. */
+body[data-experience=inforium]{background:#e9edf2;color:#213b42;font-family:'Segoe UI',system-ui,sans-serif}
+[data-experience=inforium] .layout{max-width:1580px;margin:20px auto;grid-template-columns:222px minmax(0,1fr);border-radius:22px;overflow:hidden;box-shadow:0 18px 60px #1d35431b;background:#fbfcfa;min-height:calc(100vh - 40px)}
+[data-experience=inforium] .sidebar{background:#f6f9f8;color:#425e64;border-right:1px solid #e0eae6;padding:25px 15px}
+[data-experience=inforium] .ia-brand{display:flex;color:#183f42;font-size:25px;gap:10px;letter-spacing:-1px;padding-bottom:10px}
+.ia-brandmark{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:#ef713e;color:white;font-weight:800;transform:rotate(-7deg)}
+[data-experience=inforium] .brand small{color:#718b88;font-size:8px;letter-spacing:1.2px}
+[data-experience=inforium] .workspace{color:#80948f;font-size:10px;letter-spacing:1.6px;margin:25px 10px 10px}
+[data-experience=inforium] nav a{color:#526b70;border-radius:11px;font-weight:600;font-size:13px;padding:11px 12px;gap:8px}
+[data-experience=inforium] nav a.active{background:#dcefeb;color:#0a625c}
+[data-experience=inforium] nav a:hover{background:#e9f3ee}
+[data-experience=inforium] nav b{background:#d2e9de;color:#176c60}
+.ia-sidebar-note{margin:28px 7px 0;padding:16px;background:#e7f1ed;border-radius:14px;color:#496961;font-size:12px;line-height:1.5}
+.ia-sidebar-note strong{color:#1b5752}.ia-sidebar-note p{margin:8px 0}.ia-sidebar-note small{font-size:10px}
+[data-experience=inforium] .sidebar-bottom{color:#779089;font-size:11px;padding:25px 8px 0}
+[data-experience=inforium] .sidebar-bottom a{color:#386d63}
+[data-experience=inforium] .version{border-color:#c5dcd2;font-size:9px;letter-spacing:.6px}
+[data-experience=inforium] .content{background:#fbfcfa}
+[data-experience=inforium] .topbar{height:66px;padding:0 28px;border-color:#e7eeea;background:white;color:#49666b}
+[data-experience=inforium] .topbar small{display:block;font-size:11px;color:#7c948d;margin-top:3px}
+.ia-version-links{display:flex;gap:18px;font-size:11px}.ia-version-links a{color:#427e70}
+[data-experience=inforium] main{padding:20px 28px 30px}
+[data-experience=inforium] .global-search{margin:18px 28px 0;border-color:#d8e7df;border-radius:14px;padding:13px 16px;box-shadow:0 3px 12px #193f4806}
+[data-experience=inforium] .global-search>label{color:#2b665c;font-size:14px}
+[data-experience=inforium] .global-search-row input{border-color:#d5e3dc;border-radius:9px;background:#fff;font-size:14px;padding:11px 12px}
+[data-experience=inforium] button{border-color:#d8e5df;border-radius:9px;color:#286c61;background:#fff}
+[data-experience=inforium] button:hover{background:#edf6f0}
+[data-experience=inforium] button.primary,[data-experience=inforium] .compact-tabs button[aria-pressed=true]{background:#176f67;border-color:#176f67;color:#fff}
+[data-experience=inforium] a{color:#217c6d}
+[data-experience=inforium] h1,[data-experience=inforium] h2{color:#244841;letter-spacing:-.7px}
+[data-experience=inforium] h1{font-size:28px}
+[data-experience=inforium] .compact-grid{gap:12px}
+[data-experience=inforium] .compact-card{border-color:#dfe9e2;border-radius:13px;box-shadow:0 2px 7px #173e4b06;padding:13px 14px;transition:box-shadow .15s,border-color .15s}
+[data-experience=inforium] .compact-card:hover{border-color:#97bcaa;box-shadow:0 5px 14px #173e4b0c}
+[data-experience=inforium] .compact-card h3 a{color:#22554b;font-weight:650}
+[data-experience=inforium] .content-icon-knowledge{background:#e8efea;color:#477164}
+[data-experience=inforium] .compact-toolbar{border-radius:13px;border-color:#dce8df}
+[data-experience=inforium] .compact-source-top{background:#176f67;color:#fff}
+[data-experience=inforium] .compact-meta,[data-experience=inforium] .compact-status{color:#6e837a}
+[data-experience=inforium] .saved{background:#e3f2e7;color:#1a6c59}
+[data-experience=inforium] input:focus-visible,[data-experience=inforium] button:focus-visible,[data-experience=inforium] a:focus-visible{outline-color:#ed984d}
+.ia-welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#e8f5e9;border-radius:19px;padding:23px 27px;margin:0 0 16px}
+.ia-eyebrow{color:#3b8c76;font-size:10px;letter-spacing:1.8px;font-weight:750;margin:0 0 8px}
+.ia-welcome h1{font-size:30px!important;line-height:1.1;max-width:600px;margin:0}
+.ia-welcome p:last-child{font-size:13px;color:#52776a;margin:9px 0 0}
+.ia-welcome-mark{display:flex;gap:10px;transform:rotate(-6deg);color:#387766}
+.ia-welcome-mark .ui-icon{width:52px;height:52px;padding:10px;background:#fff9e8;border-radius:16px;margin:0}
+.ia-welcome-mark .ui-icon:last-child{background:#f6ddcb;transform:translateY(12px) rotate(15deg)}
+.ia-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ia-shortcuts a{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:12px;background:white;border:1px solid #e0e9e2;border-radius:13px;text-decoration:none;color:#28574e;font-size:13px;font-weight:650}
+.ia-shortcuts small{flex:1 1 100%;font-size:10px;color:#7c8d85;font-weight:400;margin-left:22px}
+.ia-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 12px}
+.ia-section-title h2{font-size:20px!important;margin:0!important}.ia-section-title a,.ia-section-title button{font-size:12px;font-weight:600;text-decoration:none}
+.ia-section-title button{border:0;background:transparent!important;padding:4px}
+.ia-caption{font-size:12px;color:#6a8177;margin:-3px 0 12px}
+.ia-age-pills{display:flex;gap:8px;margin:10px 0 12px}.ia-age-pills button{border-radius:20px;font-size:12px!important}
+.ia-patient-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.inforium-example{border-top:3px solid #e7bb86!important}
+.example-label{display:flex;align-items:center;color:#996b3e;font-size:10px;margin-bottom:8px}
+[data-experience=inforium] .example-title{border:0;background:none;padding:0;text-align:left;font-size:15px;font-weight:650;color:#284f47;line-height:1.3;min-height:0}
+.example-tags{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 8px}.example-tags span{border-radius:5px;background:#edf5f0;color:#466c60;padding:4px 6px;font-size:10px}.example-tags span:last-child{background:#f5f0e6;color:#877456}
+.example-origin{font-size:11px;color:#73847d;line-height:1.4;margin:8px 0}
+.inforium-example .compact-card-bottom{flex-wrap:wrap}.inforium-example .compact-status{flex-basis:100%}.inforium-example .actions{margin-left:auto}
+.ia-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ia-news-grid .inforium-example{background:linear-gradient(125deg,#fff9f0,#fff 65%)}
+.ia-library-note{font-size:12px;color:#647b70;background:#edf5ef;border-radius:9px;padding:9px 12px;margin-bottom:16px}
+.ia-library-note button{font-size:11px!important;padding:3px 6px!important;min-height:24px!important}
+.ia-map-actions{margin:16px 0}.ia-package{padding-left:20px}.ia-package li{margin:15px 0}.ia-package small{display:block;color:#6a8076;margin-top:4px}
+[data-experience=inforium] dialog{border-radius:18px;border:1px solid #d3e2d9}
+@media(max-width:1250px){.ia-patient-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ia-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){[data-experience=inforium] .layout{grid-template-columns:180px minmax(0,1fr);margin:8px;border-radius:16px}[data-experience=inforium] main{padding:16px}[data-experience=inforium] .global-search{margin:12px 16px 0}.ia-welcome{padding:20px}.ia-welcome-mark{display:none}.ia-news-grid{grid-template-columns:1fr}.ia-welcome h1{font-size:25px!important}}
+@media(max-width:760px){[data-experience=inforium] .layout{display:block;margin:0;border-radius:0}[data-experience=inforium] .sidebar{padding:10px 12px;border:0}[data-experience=inforium] .ia-brand{display:flex;padding:0 0 10px;font-size:22px}[data-experience=inforium] .ia-sidebar-note{display:none}[data-experience=inforium] nav{overflow:auto}[data-experience=inforium] .topbar{height:50px;padding:0 16px}.ia-version-links{gap:8px;font-size:10px}.ia-shortcuts{gap:8px}.ia-shortcuts a{font-size:12px;padding:10px}.ia-patient-grid{grid-template-columns:1fr!important}.ia-section-title h2{font-size:18px!important}.ia-welcome{padding:18px}[data-experience=inforium] .compact-card{padding:12px}.ia-section-title{align-items:flex-start}}
+
+[data-experience=inforium] .source-options input{flex:0 0 18px;width:18px;min-width:18px}
+@media(max-width:600px){[data-experience=inforium] .source-options{grid-template-columns:1fr}[data-experience=inforium] .source-options label{justify-content:flex-start}}

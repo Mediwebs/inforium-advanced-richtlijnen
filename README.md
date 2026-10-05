@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.6
+# Inforium CHIPboard v0.8
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -21,6 +21,10 @@ Filter op soort informatie, doelgroep, vakgebied en toegangsstatus. Alle aanvull
 ## Parallelle compacte versie
 
 [Open CHIPboard Compact](https://mediwebs.github.io/inforium-advanced-richtlijnen/compact.html#zoeken). De uitgebreide versie blijft beschikbaar op index.html. Beide gebruiken dezelfde bronbestanden en zoeklogica; sessieselecties worden niet tussen vensters overgedragen. De compacte variant toont bronlinks bovenaan, korte kaarten en details op aanvraag. [Ontwerp en aansluitroute voor Inforium Advanced](docs/COMPACT.md).
+
+## Geïntegreerde Inforium-werkplek
+
+[Open Inforium Advanced × CHIPboard](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start). Een derde prototype in de groene Inforium-stijl, met gezamenlijk zoeken, patiënteninformatie, nieuws en een werkmap. Bevat dezelfde 4.701 bronkaarten plus 15 expliciet gemarkeerde ontwerpvoorbeelden. Een informatiepakket toont uitsluitend echte patiëntenbronlinks; er wordt niets verzonden. [Werking, herkomst en vervolgintegratie](docs/INTEGRATED.md).
 
 ## Gebruiken
 

@@ -17,9 +17,9 @@ export function parseQuery(query){
  if(terms.length>12)return {terms:[],error:'Gebruik maximaal 12 verschillende trefwoorden.'};
  return {terms,error:''};
 }
-export function buildSearchIndex(resources,labels={}){
+export function buildSearchIndex(resources,labels={}, {includeDemos=false}={}){
  const byId=new Map(resources.map(r=>[r.id,r]));
- return resources.filter(r=>!r.demo).map(record=>{
+ return resources.filter(r=>!r.demo||includeDemos).map(record=>{
   const fields=[];
   const add=(label,text,weight)=>{if(text){const value=String(text);fields.push({label,text:value,normalized:normalize(value),words:normalize(value).split(' '),weight});}};
   add('Broncollectie',SOURCE_COLLECTIONS[collectionOf(record)],2);

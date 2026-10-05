@@ -1,0 +1,219 @@
+{
+  "source": "https://mediwebs.github.io/Inforium-advanced/",
+  "sourceCommit": "e2ccdfeb290bc3d339415fad2b74e8f35b3e5c22",
+  "checkedAt": "2026-10-05",
+  "status": "demonstration",
+  "records": [
+    {
+      "id": "inforium-patient-0",
+      "title": "Voeding: bijvoeding vanaf 4 maanden",
+      "keywords": [
+        "voeding",
+        "bijvoeding",
+        "baby",
+        "0-4"
+      ],
+      "topic": "Voeding",
+      "sourceLabel": "voedingscentrum.nl",
+      "art": "food",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-1",
+      "title": "Zindelijkheidstraining",
+      "keywords": [
+        "zindelijkheid",
+        "ontwikkeling",
+        "0-4"
+      ],
+      "topic": "Ontwikkeling",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "growth",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-2",
+      "title": "Voorkeurshouding",
+      "keywords": [
+        "ontwikkeling",
+        "baby",
+        "0-4"
+      ],
+      "topic": "Baby",
+      "sourceLabel": "NCJ",
+      "art": "baby",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-3",
+      "title": "Voeding: uitbreiding vanaf 6 maanden",
+      "keywords": [
+        "voeding",
+        "baby",
+        "0-4"
+      ],
+      "topic": "Voeding",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "food",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-4",
+      "title": "Informatie vaccinaties",
+      "keywords": [
+        "vaccinaties",
+        "gezondheid",
+        "0-4"
+      ],
+      "topic": "Gezondheid",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "vaccine",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-5",
+      "title": "Slapen",
+      "keywords": [
+        "slapen",
+        "baby",
+        "0-4"
+      ],
+      "topic": "Dagritme",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "sleep",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-6",
+      "title": "Voeding voor dreumes en peuter",
+      "keywords": [
+        "voeding",
+        "dreumes",
+        "peuter",
+        "0-4"
+      ],
+      "topic": "Voeding",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "food",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-7",
+      "title": "Navelgranuloom behandelen",
+      "keywords": [
+        "baby",
+        "gezondheid",
+        "0-4"
+      ],
+      "topic": "Baby",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "baby",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-8",
+      "title": "Ontwikkeling en motoriek 0 tot 4 jaar",
+      "keywords": [
+        "ontwikkeling",
+        "motoriek",
+        "0-4"
+      ],
+      "topic": "Ontwikkeling",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "growth",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-9",
+      "title": "Borstvoeding",
+      "keywords": [
+        "voeding",
+        "borstvoeding",
+        "baby",
+        "0-4"
+      ],
+      "topic": "Voeding",
+      "sourceLabel": "Voedingscentrum, ZuidZorg",
+      "art": "baby",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-10",
+      "title": "Stevig Ouderschap",
+      "keywords": [
+        "ouderschap",
+        "0-4"
+      ],
+      "topic": "Ouderschap",
+      "sourceLabel": "stevigouderschap.nl",
+      "art": "growth",
+      "age": "0–4 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-patient-11",
+      "title": "Bedplassen",
+      "keywords": [
+        "zindelijkheid",
+        "4-12"
+      ],
+      "topic": "Zindelijkheid",
+      "sourceLabel": "GGD Brabant-Zuidoost",
+      "art": "sleep",
+      "age": "4–12 jaar",
+      "contentType": "patient"
+    },
+    {
+      "id": "inforium-news-0",
+      "title": "Ontwikkeling in beeld",
+      "description": "Ruimte voor een ontwikkelupdate of een nieuw thema voor ouders.",
+      "art": "growth",
+      "topic": "JGZ",
+      "keywords": [
+        "JGZ",
+        "growth"
+      ],
+      "age": null,
+      "sourceLabel": "Inforium Advanced · ontwerp",
+      "contentType": "news"
+    },
+    {
+      "id": "inforium-news-1",
+      "title": "Informatie voor anderstalige ouders",
+      "description": "Een plek om begrijpelijke en meertalige informatie uit te lichten.",
+      "art": "language",
+      "topic": "JGZ",
+      "keywords": [
+        "JGZ",
+        "language"
+      ],
+      "age": null,
+      "sourceLabel": "Inforium Advanced · ontwerp",
+      "contentType": "news"
+    },
+    {
+      "id": "inforium-news-2",
+      "title": "Nieuws uit de JGZ-regio",
+      "description": "Berichten van het team of de locaties verschijnen hier.",
+      "art": "regional",
+      "topic": "JGZ",
+      "keywords": [
+        "JGZ",
+        "regional"
+      ],
+      "age": null,
+      "sourceLabel": "Inforium Advanced · ontwerp",
+      "contentType": "news"
+    }
+  ]
+}
