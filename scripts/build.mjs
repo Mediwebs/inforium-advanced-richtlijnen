@@ -1,3 +1,4 @@
+import {decodeExtraSources} from '../src/extra-sources.js';
 import {decodePatientSources} from '../src/patient-sources.js';
 import {decodePrimaryGuidelines} from '../src/primary-guidelines.js';
 import {decodePznl} from '../src/pznl.js';
@@ -23,6 +24,7 @@ for(const s of sources){if(new URL(s.url).protocol!=='https:')throw new Error('O
 modules.forEach(validateManifest);
 console.log('NHG / NCJ:',decodePrimaryGuidelines(await read('data/primary-guidelines.json')).length,'bronverwijzingen');
 console.log('Patiënteninformatie:',decodePatientSources(await read('data/patient-sources.json')).length,'kaarten');
+console.log('Aanvullende bronnen:',decodeExtraSources(await read('data/extra-sources.json')).length,'kaarten');
 const pznl=decodePznl(await read('data/pznl.json'));console.log('PZNL:',pznl.length,'metadatarecords');
 console.log('Inforium:',decodeInforium(await read('data/inforium-examples.json')).length,'gemarkeerde ontwerpvoorbeelden');
 const groningen=decodeGroningen(await read('data/groningen.json'));

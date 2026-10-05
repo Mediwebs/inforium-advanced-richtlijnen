@@ -1,5 +1,6 @@
+import {EXTRA_COLLECTIONS,LANGUAGE_LABELS} from './extra-sources.js';
 import {PATIENT_COLLECTIONS} from './patient-sources.js';
-export const SOURCE_COLLECTIONS={...PATIENT_COLLECTIONS,nhg:'NHG · Richtlijnen',ncj:'NCJ · JGZ-richtlijnen',national:'Richtlijnendatabase',groningen:'Oncologie Groningen',palliaweb:'PZNL · Palliaweb / Pallialine','pznl-patient':'PZNL · Patiënten en naasten'};
+export const SOURCE_COLLECTIONS={...EXTRA_COLLECTIONS,...PATIENT_COLLECTIONS,nhg:'NHG · Richtlijnen',ncj:'NCJ · JGZ-richtlijnen',national:'Richtlijnendatabase',groningen:'Oncologie Groningen',palliaweb:'PZNL · Palliaweb / Pallialine','pznl-patient':'PZNL · Patiënten en naasten'};
 export const collectionOf=r=>r.collection||(r.groningen?'groningen':'national');
 // Deterministic bibliographic search. Scores express text overlap only.
 export const SEARCH_ALIASES = {
@@ -25,7 +26,7 @@ export function buildSearchIndex(resources,labels={}, {includeDemos=false}={}){
   const add=(label,text,weight)=>{if(text){const value=String(text);fields.push({label,text:value,normalized:normalize(value),words:normalize(value).split(' '),weight});}};
   add('Broncollectie',SOURCE_COLLECTIONS[collectionOf(record)],2);
   (record.keywords||[]).forEach(x=>add('Catalogustrefwoord',x,5));
-  add('Titel',record.title,12);(record.variants||[]).filter(v=>v.title!==record.title).forEach(v=>add('Alternatieve titel in export',v.title,10));add('Broncode',record.code,15);
+  (record.languages||[]).forEach(l=>add('Taal volgens import',LANGUAGE_LABELS[l]||l,3));add('Titel',record.title,12);(record.variants||[]).filter(v=>v.title!==record.title).forEach(v=>add('Alternatieve titel in export',v.title,10));add('Broncode',record.code,15);
   if(record.source?.title!==record.title)add('Oorspronkelijke brontitel',record.source?.title,8);
   (record.topics||[]).forEach(x=>add('Onderwerp',labels.topics?.[x]||x,7));
   (record.specialties||[]).forEach(x=>add('Vakgebied',labels.specialties?.[x]||x,3));

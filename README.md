@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.11
+# Inforium CHIPboard v0.12
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -8,7 +8,7 @@ Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbrei
 
 Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met algemene trefwoorden; geen dossiers of gegenereerde medische antwoorden.
 
-[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 9.301 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
+[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 12.221 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
 
 ## PZNL en bronselectie v0.5
 
@@ -24,7 +24,7 @@ Filter op soort informatie, doelgroep, vakgebied en toegangsstatus. Alle aanvull
 
 ## Geïntegreerde Inforium-werkplek
 
-[Open Inforium Advanced × CHIPboard](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start). Een derde prototype in de groene Inforium-stijl, met gezamenlijk zoeken, patiënteninformatie, nieuws en een werkmap. Bevat dezelfde 9.301 bronkaarten plus 15 expliciet gemarkeerde ontwerpvoorbeelden. Een informatiepakket toont uitsluitend echte patiëntenbronlinks; er wordt niets verzonden. [Werking, herkomst en vervolgintegratie](docs/INTEGRATED.md).
+[Open Inforium Advanced × CHIPboard](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start). Een derde prototype in de groene Inforium-stijl, met gezamenlijk zoeken, patiënteninformatie, nieuws en een werkmap. Bevat dezelfde 12.221 bronkaarten plus 15 expliciet gemarkeerde ontwerpvoorbeelden. Een informatiepakket toont uitsluitend echte patiëntenbronlinks; er wordt niets verzonden. [Werking, herkomst en vervolgintegratie](docs/INTEGRATED.md).
 
 ## NHG en NCJ / JGZ v0.9
 
@@ -119,6 +119,23 @@ De Inforium-verzendroute is nog niet aangeleverd. Die knop toont expliciet dat d
 
 QR-bibliotheek: qrcode-generator 1.4.4, Kazuhiko Arase, MIT; lokaal opgenomen in src/vendor/qrcode.js met ESM-export. Herkomst: https://github.com/kazuhikoarase/qrcode-generator en de vastgepinde npm-distributie. Browsercontrole: QR onafhankelijk gedecodeerd met jsQR, klembord en terugval getest, mobiel en geen netwerkverkeer tijdens delen.
 
+## Aanvullende Amsterdam UMC-, NVOG- en radiotherapiebronnen — v0.12
+
+Zeven aangeleverde CSV-bestanden bevatten 2.923 regels. Na samenvoegen van één dubbele link binnen de nieuwe import en twee bestaande Kanker.nl-links zijn 2.887 nieuwe patiënteninformatiekaarten en 33 professionele werkafspraken toegevoegd. De volledige catalogus bevat nu 12.221 bronkaarten plus 15 Inforium-ontwerpvoorbeelden.
+
+- Amsterdam UMC: 2.659 kaarten uit de algemene patiënteninformatie, beide Hartcentrum-bestanden en Radiotherapie.
+- NVOG: 134 videokaarten, met taal en bronpagina uit de export. Nederlands, Engels en Arabisch komen voor; er zijn geen nieuwe vertalingen gemaakt.
+- Kanker.nl Radiotherapie: 96 vermeldingen, waarvan 94 nieuwe kaarten. De collectie Kanker.nl bevat nu 378 kaarten.
+- Transmuraal Amsterdam: 33 werkafspraken voor zorgverleners, op expliciete bevestiging van de gebruiker gescheiden van patiënteninformatie. Geen patiënten-deelacties of opname in informatiepakketten.
+
+Taalcodes worden behouden en zichtbaar gemaakt; zoeken op bijvoorbeeld Arabisch vindt die taalmetadata. Amsterdam UMC bevat ook Turks, Frans, Tigrinya en Somalisch. Specifieke Hartcentrum- en Radiotherapie-bestanden houden hun vakgebied; overige onbekende categorieën worden niet ingevuld. Video's worden via de oorspronkelijke link geopend, niet automatisch ingebed of afgespeeld.
+
+Een Kanker.nl-exporttitel L77: is na broncontrole vervangen door Gevolgen van bestraling, met type Lotgenoten · gespreksgroep. Oorspronkelijke titel blijft in de rijherkomst staan. Titelbron: https://www.kanker.nl/ervaringen-van-anderen/gespreksgroepen/gevolgen-van-bestraling. Overige links zijn overgenomen, zonder volledige hercontrole van bereikbaarheid of inhoud. Exportdatum ontbreekt in deze bestanden; importdatum is 5 oktober 2026. Notities over eerdere raadpleging zijn geen nieuwe medische controle.
+
+Bronbestanden: AUMC_Hartcentrum_aanvullend_CHIP_import.csv; Transmuraal_Amsterdam_CHIP_import.csv; AUMC_Hartcentrum_CHIP_import (1).csv; NVOG_Videos_Alle_talen_CHIP_import.csv; Kanker_nl_Radiotherapie_CHIP_import.csv; AUMC_Alle_patienteninformatie_CHIP_import.csv; AUMC_Radiotherapie_CHIP_import.csv. Aangeleverd vanuit Mijn Drive/000temp, ongewijzigd behouden. SHA-256-bestandshashes en rijherkomst: data/extra-sources.json. Validatie en samenvoegen: src/extra-sources.js. Alle bestanden UTF-8; Radiotherapie bevat 24 kolommen, de overige 27. Ontbrekende eindkolommen worden niet geïnterpreteerd.
+
+48 tests geslaagd. Browsercontrole in alle drie interfaces: bronselectie, aantallen, Arabisch zoeken, bronpagina bij video, professionele uitsluiting, AUMC-snelkeuze en mobiele weergave.
+
 ## Herkomst
 
 - Aangemaakt: 2026-10-04; laatst bijgewerkt: 2026-10-05.
@@ -127,4 +144,4 @@ QR-bibliotheek: qrcode-generator 1.4.4, Kazuhiko Arase, MIT; lokaal opgenomen in
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.11; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.12; niet klinisch gevalideerd.
