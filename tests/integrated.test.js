@@ -16,5 +16,5 @@ test('package preview excludes examples, professional knowledge and news',()=>{
  const real={id:'real',title:'Patiëntenbron',audience:'patient',url:'https://example.org/patient',owner:'Bron'};
  const professional={id:'pro',title:'Richtlijn',audience:'professional',url:'https://example.org/pro'};
  const html=packagePreview([...records,real,professional],new Set([records[0].id,'real','pro']));
- assert.ok(html.includes('https://example.org/patient'));assert.ok(!html.includes('https://example.org/pro'));assert.ok(html.includes('2 andere kaart'));assert.ok(html.includes('niets verzonden'));
+ assert.equal((html.match(/data-patient-action=/g)||[]).length,3);assert.ok(html.includes('https://example.org/patient'));assert.ok(!html.includes('https://example.org/pro'));assert.ok(html.includes('2 andere kaart'));assert.ok(html.includes('niets verzonden'));
 });
