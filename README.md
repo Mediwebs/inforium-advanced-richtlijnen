@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.10
+# Inforium CHIPboard v0.11
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -111,6 +111,14 @@ CSV zonder kopregels: kolom 1 bron-ID, 3 URL, 4 titel, 5 bronlabel, 11 zoektrefw
 
 Bronbestanden: data_Groeigids_05-10-2026.csv, data_Kanker.nl_05-10-2026.csv, data_KNO (V2)_05-10-2026.csv, data_Thuisarts_05-10-2026.csv en data_Voedingscentrum_05-10-2026.csv. Aangeleverd door de gebruiker vanuit Mijn Drive/000temp. Bestandshashes, aantallen en rijherkomst staan in data/patient-sources.json; validatie in src/patient-sources.js. Exportdatum en importdatum zijn geen publicatie- of geldigheidsdatum. Originele bestanden blijven ongewijzigd.
 
+## Patiënteninformatie delen — v0.11
+
+Patiëntenkaarten met een bruikbare bronlink bieden Verzenden met Inforium, QR-code en Link kopiëren. Dezelfde acties zijn beschikbaar in Details en de werkmap. QR en kopiëren verwijzen naar de oorspronkelijke bron, met behoud van query en fragment. QR wordt lokaal gegenereerd; geen externe QR-service. Bij geblokkeerde klembordtoegang wordt de link selecteerbaar getoond. Voorbeelden, professionele richtlijnen en te controleren links krijgen geen deelacties.
+
+De Inforium-verzendroute is nog niet aangeleverd. Die knop toont expliciet dat de koppeling ontbreekt en er niets is verzonden; alleen de link kan worden gekopieerd voor gebruik in de bestaande Inforium-omgeving. Geen ontvanger- of patiëntinvoer toegevoegd. De echte verzendintegratie blijft afhankelijk van de juiste URL/API en authenticatieafspraken.
+
+QR-bibliotheek: qrcode-generator 1.4.4, Kazuhiko Arase, MIT; lokaal opgenomen in src/vendor/qrcode.js met ESM-export. Herkomst: https://github.com/kazuhikoarase/qrcode-generator en de vastgepinde npm-distributie. Browsercontrole: QR onafhankelijk gedecodeerd met jsQR, klembord en terugval getest, mobiel en geen netwerkverkeer tijdens delen.
+
 ## Herkomst
 
 - Aangemaakt: 2026-10-04; laatst bijgewerkt: 2026-10-05.
@@ -119,4 +127,4 @@ Bronbestanden: data_Groeigids_05-10-2026.csv, data_Kanker.nl_05-10-2026.csv, dat
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.10; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.11; niet klinisch gevalideerd.

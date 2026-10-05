@@ -19,7 +19,7 @@ Koppel nieuws als eigen collectie met publicatiedatum, redactionele status en br
 
 ## Controle
 
-43 geautomatiseerde tests geslaagd. Browsercontrole van zoeken, echte bronnen versus voorbeelden, leeftijdslabels, patiënten- en nieuwsingangen, gemengde werkmap, informatiepakket, bronlinks bovenaan en mobiele weergave. Bestaande compacte versie eveneens gecontroleerd.
+45 geautomatiseerde tests geslaagd. Browsercontrole van zoeken, echte bronnen versus voorbeelden, leeftijdslabels, patiënten- en nieuwsingangen, gemengde werkmap, informatiepakket, bronlinks bovenaan en mobiele weergave. Bestaande compacte versie eveneens gecontroleerd.
 
 ## Uitbreiding NHG en NCJ — v0.9
 
@@ -45,6 +45,14 @@ CSV zonder kopregels: kolom 1 bron-ID, 3 URL, 4 titel, 5 bronlabel, 11 zoektrefw
 
 Bronbestanden: data_Groeigids_05-10-2026.csv, data_Kanker.nl_05-10-2026.csv, data_KNO (V2)_05-10-2026.csv, data_Thuisarts_05-10-2026.csv en data_Voedingscentrum_05-10-2026.csv. Aangeleverd door de gebruiker vanuit Mijn Drive/000temp. Bestandshashes, aantallen en rijherkomst staan in data/patient-sources.json; validatie in src/patient-sources.js. Exportdatum en importdatum zijn geen publicatie- of geldigheidsdatum. Originele bestanden blijven ongewijzigd.
 
+## Patiënteninformatie delen — v0.11
+
+Patiëntenkaarten met een bruikbare bronlink bieden Verzenden met Inforium, QR-code en Link kopiëren. Dezelfde acties zijn beschikbaar in Details en de werkmap. QR en kopiëren verwijzen naar de oorspronkelijke bron, met behoud van query en fragment. QR wordt lokaal gegenereerd; geen externe QR-service. Bij geblokkeerde klembordtoegang wordt de link selecteerbaar getoond. Voorbeelden, professionele richtlijnen en te controleren links krijgen geen deelacties.
+
+De Inforium-verzendroute is nog niet aangeleverd. Die knop toont expliciet dat de koppeling ontbreekt en er niets is verzonden; alleen de link kan worden gekopieerd voor gebruik in de bestaande Inforium-omgeving. Geen ontvanger- of patiëntinvoer toegevoegd. De echte verzendintegratie blijft afhankelijk van de juiste URL/API en authenticatieafspraken.
+
+QR-bibliotheek: qrcode-generator 1.4.4, Kazuhiko Arase, MIT; lokaal opgenomen in src/vendor/qrcode.js met ESM-export. Herkomst: https://github.com/kazuhikoarase/qrcode-generator en de vastgepinde npm-distributie. Browsercontrole: QR onafhankelijk gedecodeerd met jsQR, klembord en terugval getest, mobiel en geen netwerkverkeer tijdens delen.
+
 ## Herkomst
 
 Datum aangemaakt en laatst bijgewerkt: 2026-10-05.
@@ -55,7 +63,7 @@ Codex-projectmap: richtlijnen en lokale afspraken integratie.
 Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156.
 Voortbouwend op docs/COMPACT.md en de bestaande broncatalogi.
 Ontwerpbron: Mediwebs/Inforium-advanced, commit e2ccdfeb290bc3d339415fad2b74e8f35b3e5c22; geraadpleegd 2026-10-05. Groningen-inventaris: 2026-10-03. PZNL-overzicht: gecontroleerd 2026-10-05; geen inhoudelijke medische herbeoordeling.
-Status: werkdocument bij klikbaar prototype v0.10.
+Status: werkdocument bij klikbaar prototype v0.11.
 
 [Klikbaar prototype](https://mediwebs.github.io/inforium-advanced-richtlijnen/integrated.html#start)
 
