@@ -1,0 +1,205 @@
+[
+  {
+    "id": "groningen-section-open-studies-standaarden",
+    "title": "Open studies / standaarden",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/open-studies-standaarden/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": false,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Open studies / standaarden"
+    ]
+  },
+  {
+    "id": "groningen-section-gesloten-studies",
+    "title": "Gesloten studies",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/gesloten-studies/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": false,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Gesloten studies"
+    ]
+  },
+  {
+    "id": "groningen-section-fase-i-studies",
+    "title": "Vroeg klinische studies",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/fase-i-studies/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": true,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Vroeg klinische studies"
+    ]
+  },
+  {
+    "id": "groningen-section-ondersteunend",
+    "title": "Ondersteunend",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/ondersteunend/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": true,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Ondersteunend"
+    ]
+  },
+  {
+    "id": "groningen-section-moleculaire-diagnostiek",
+    "title": "Moleculaire diagnostiek",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/moleculaire-diagnostiek/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": true,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Moleculaire diagnostiek"
+    ]
+  },
+  {
+    "id": "groningen-section-palliatieve-zorg",
+    "title": "Palliatieve zorg",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/palliatieve-zorg/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": true,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Palliatieve zorg"
+    ]
+  },
+  {
+    "id": "groningen-section-kuren",
+    "title": "Kuren",
+    "url": "https://medischeoncologiegroningen.nl/overzicht-tumoren-en-behandelingen/kuren/",
+    "collection": "groningen",
+    "kind": "overview",
+    "audience": "professional",
+    "contentType": "knowledge",
+    "navigation": true,
+    "source_kind": "overview",
+    "owner": "Medische Oncologie Groningen",
+    "specialties": [
+      "oncologie"
+    ],
+    "topics": [],
+    "tasks": [],
+    "demo": false,
+    "layer": "groningen",
+    "locked": true,
+    "version": "Rubriek geraadpleegd 2026-10-05",
+    "checked_at": "2026-10-05",
+    "published_at": null,
+    "validity_assessed_at": null,
+    "rights": "Bronverwijzing",
+    "description": "Rubriek uit het tumor- en behandeloverzicht. Onderdelen kunnen inloggen vereisen; geen volledige tekstimport.",
+    "keywords": [
+      "Kuren"
+    ]
+  }
+]

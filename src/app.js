@@ -1,3 +1,4 @@
+import {filterTumorContexts,tumorFilters} from './tumor-search.js';
 import {ONCO_COLLECTIONS,validateOncology,oncologyHome,oncologyRegister} from './oncology.js';
 import {JGZ_COLLECTIONS,JGZ_KNOWLEDGE,validateJgzLibrary,jgzHome,jgzRegister,jgzNews} from './jgz.js';
 import {decodeExtraSources,mergeSourceImports,LANGUAGE_LABELS} from './extra-sources.js';
@@ -118,11 +119,13 @@ function groningenDetails(r){
 
 const refinement={extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'},usage=new Map();
 let lastOpened=null;
+const tumorSelection={group:'',pathology:'',phase:'',status:''};
 let searchIndex=[],searchQuery='',searchPage=0,searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS)),searchComplete=false;
 function searchPageView(){
  const route=location.hash.slice(1),iaType=route==='patienten'?'patient':route==='nieuws'?'news':compactType;
- const currentIndex=integratedMode&&iaAge?searchIndex.filter(x=>x.record.inforium&&x.record.age===iaAge):searchIndex;
- if(compactMode){const result=compactSearch({index:currentIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:integratedMode?iaType:compactType,filtersOpen:compactFiltersOpen,integrated:integratedMode,jgz:jgzMode,editionLabel:oncologyMode?'Oncologie':'JGZ'},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return (integratedMode?'<div class="ia-library-note">'+(oncologyMode?'Oncologie Groningen · herkomst en dekking bij Bronnenoverzicht.':jgzMode?'Afzonderlijke JGZ-werkplek · negen broncollecties; herkomst en dekking bij Bronnenoverzicht.':route==='nieuws'?'Nieuws uit de bestaande inventaris en duidelijk gemarkeerde voorbeelden; geen actuele nieuwsfeed.':'Echte bronverwijzingen en herkenbare Inforium-ontwerpvoorbeelden in één overzicht.')+(iaAge?' <strong>Leeftijdslabel voorbeelden: '+esc(iaAge)+'</strong> <button id="ia-age-clear">Wis leeftijd</button>':'')+'</div>':'')+result.html;}
+ let currentIndex=integratedMode&&iaAge?searchIndex.filter(x=>x.record.inforium&&x.record.age===iaAge):searchIndex;
+ if(oncologyMode&&Object.values(tumorSelection).some(Boolean)){const ids=new Set(filterTumorContexts(resources,tumorSelection).map(r=>r.id));currentIndex=currentIndex.filter(x=>ids.has(x.record.id));}
+ if(compactMode){const result=compactSearch({index:currentIndex,query:searchQuery,collections:searchCollections,complete:searchComplete,refinement,usage,page:searchPage,type:integratedMode?iaType:compactType,filtersOpen:compactFiltersOpen,integrated:integratedMode,jgz:jgzMode,editionLabel:oncologyMode?'Oncologie':'JGZ'},{card,options,specialties});searchPage=result.page;compactHits=new Map(result.hits.map(h=>[h.record.id,h]));return (integratedMode?'<div class="ia-library-note">'+(oncologyMode?'Oncologie Groningen · herkomst en dekking bij Bronnenoverzicht.':jgzMode?'Afzonderlijke JGZ-werkplek · negen broncollecties; herkomst en dekking bij Bronnenoverzicht.':route==='nieuws'?'Nieuws uit de bestaande inventaris en duidelijk gemarkeerde voorbeelden; geen actuele nieuwsfeed.':'Echte bronverwijzingen en herkenbare Inforium-ontwerpvoorbeelden in één overzicht.')+(iaAge?' <strong>Leeftijdslabel voorbeelden: '+esc(iaAge)+'</strong> <button id="ia-age-clear">Wis leeftijd</button>':'')+'</div>':'')+(oncologyMode?tumorFilters(resources,tumorSelection):'')+result.html;}
  const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete});
  const refined=refineResults(searchIndex,response.results,refinement,usage),rows=refined.results;
  const kinds=Object.fromEntries([...new Set(searchIndex.map(x=>kindOf(x.record)))].sort((a,b)=>a.localeCompare(b,'nl')).map(k=>[k,k]));
@@ -226,7 +229,8 @@ document.addEventListener('click',async event=>{
  if(button.id==='ia-package'&&integratedMode)showDialog(packagePreview(resources,selected));
  if(button.hasAttribute('data-pznl')){searchCollections=new Set(['palliaweb','pznl-patient']);searchQuery='palliatieve zorg';$('#global-query').value=searchQuery;searchPage=0;location.hash='zoeken';render();}
  if(button.id==='sources-all'||button.id==='sources-none'){searchCollections=button.id==='sources-all'?new Set(Object.keys(SOURCE_COLLECTIONS)):new Set();searchPage=0;render();$('#'+button.id).focus();}
- if(button.id==='refine-reset'){iaAge='';if(compactMode){compactType='';searchComplete=false;}Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
+ if(button.id==='tumor-reset'){Object.keys(tumorSelection).forEach(k=>tumorSelection[k]='');searchPage=0;render();return;}
+ if(button.id==='refine-reset'){Object.keys(tumorSelection).forEach(k=>tumorSelection[k]='');iaAge='';if(compactMode){compactType='';searchComplete=false;}Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
  if(button.id==='search-clear'){searchQuery='';$('#global-query').value='';searchPage=0;render();$('#global-query').focus();}
  if(button.id==='search-prev'||button.id==='search-next'){searchPage+=button.id==='search-next'?1:-1;render();$('#main').focus();}
  if(button.dataset.related){$('#detail').close();showResource(button.dataset.related);}
@@ -243,6 +247,7 @@ document.addEventListener('click',async event=>{
  if(button.id==='contract')showDialog('<div class="dialog-top"><span class="badge">Aansluitroute</span><button data-close>Sluiten ✕</button></div><h2 id="detail-title">Een module toevoegen</h2><ol class="scope-list"><li>Leg eigenaar, bronrechten en beoogd gebruik vast.</li><li>Voeg een manifest toe aan data/modules.json met vaste HTTPS-link en patientData: false.</li><li>Map bronmetadata naar een eigen adapter; behoud versie en herkomst.</li><li>Laat inhoud en modulecombinatie beoordelen.</li><li>Valideer, test en publiceer een nieuwe versie via GitHub.</li></ol><p>Een link is nog geen API-integratie. Uitwisseling en authenticatie vereisen aanvullende bouw en toetsing.</p>');
 });
 document.addEventListener('change',e=>{
+ if(oncologyMode&&e.target.dataset.tumorFilter){const key=e.target.dataset.tumorFilter;tumorSelection[key]=e.target.value;if(key==='group'){tumorSelection.pathology='';tumorSelection.phase='';tumorSelection.status='';}searchCollections.add('groningen');searchPage=0;render();document.querySelector('[data-tumor-filter="'+key+'"]').focus();return;}
  if(e.target.id.startsWith('refine-')){const key=e.target.id.slice(7);if(key!=='extra'&&Object.hasOwn(refinement,key)){refinement.extra=$('#refine-extra').value.trim();refinement[key]=e.target.value;searchPage=0;render();$('#refine-'+key).focus();}}
  if(e.target.dataset.collection){const id=e.target.dataset.collection;if(e.target.checked)searchCollections.add(id);else searchCollections.delete(id);searchPage=0;render();$('[data-collection="'+id+'"]').focus();}
  if(e.target.id==='search-complete'){searchComplete=e.target.checked;searchPage=0;render();$('#search-complete').focus();}
