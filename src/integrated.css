@@ -75,3 +75,22 @@ body[data-experience=inforium]{background:#e9edf2;color:#213b42;font-family:'Seg
 @media(max-width:600px){[data-experience=inforium] .source-options{grid-template-columns:1fr}[data-experience=inforium] .source-options label{justify-content:flex-start}}
 
 [data-edition=jgz] .ia-shortcuts button{text-align:left;padding:16px;background:white;border:1px solid #d6e5dd;border-radius:12px;font-weight:600}[data-edition=jgz] .ia-shortcuts button small{display:block;color:#60776b;font-weight:400;margin-top:6px}
+/* Inforium illustrations: decorative, local SVGs; compact on small screens. */
+[data-edition=jgz] .ia-welcome{position:relative;overflow:hidden;gap:20px;padding-right:0}
+[data-edition=jgz] .ia-welcome>div:first-child{flex:1;min-width:0}
+.jgz-family-art{width:32%;max-width:330px;align-self:stretch;display:flex;border-radius:70px 0 0 70px;overflow:hidden}
+.jgz-family-art svg{display:block;width:100%;height:100%;min-height:165px;object-fit:cover}
+.jgz-source-icon{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;vertical-align:middle;margin-right:9px;border-radius:10px;background:#e3f1e9;color:#39796b;flex-shrink:0}
+.jgz-source-icon .ui-icon{width:21px;height:21px;margin:0}
+.jgz-icon-voedingscentrum{background:#faead2;color:#9b632d}.jgz-icon-rivm{background:#e2edf8;color:#467796}.jgz-icon-kinderveiligheid{background:#f8e1d7;color:#a95d40}.jgz-icon-pharos{background:#e9e5f7;color:#78639d}.jgz-icon-groeigids{background:#e4f1dd;color:#628343}
+[data-edition=jgz] .ia-shortcuts small{padding-left:43px}
+[data-edition=jgz] .ia-section-title h2{display:flex;align-items:center;gap:8px}
+.jgz-feature-icon{width:32px;height:32px;display:grid;place-items:center;background:#edf4eb;color:#5a8168;border-radius:9px;margin:6px 0}
+.jgz-feature-icon .ui-icon{margin:0}
+[data-edition=jgz] .jgz-news-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+[data-edition=jgz] .jgz-news-cards a{overflow:hidden;padding:0 0 14px;text-indent:14px;background:#fff}
+.jgz-news-art{display:block;margin-bottom:12px;text-indent:0;height:125px;overflow:hidden}
+.jgz-news-art svg{display:block;width:100%;height:100%}
+[data-edition=jgz] .jgz-news-cards small{padding-left:0;text-indent:14px}
+@media(max-width:760px){[data-edition=jgz] .ia-welcome{gap:8px;padding-right:0}.jgz-family-art{width:27%;border-radius:25px 0 0 25px}.jgz-family-art svg{min-height:160px}[data-edition=jgz] .ia-welcome h1{font-size:22px!important}[data-edition=jgz] .ia-shortcuts button{padding:10px}.jgz-source-icon{width:28px;height:28px;margin-right:5px}[data-edition=jgz] .ia-shortcuts small{padding-left:0}.jgz-news-art{height:95px}[data-edition=jgz] .jgz-news-cards a{text-indent:0;padding:0 10px 12px}.jgz-news-art{margin-left:-10px;margin-right:-10px}[data-edition=jgz] .jgz-news-cards small{text-indent:0}}
+[data-edition=jgz] .jgz-news-cards a{display:block}.jgz-news-art{width:100%}@media(max-width:760px){.jgz-news-art{width:calc(100% + 20px)}}
