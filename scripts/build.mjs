@@ -1,3 +1,4 @@
+import {decodeJgzAdditions,JGZ_COLLECTIONS,validateJgzLibrary} from '../src/jgz.js';
 import {decodeExtraSources} from '../src/extra-sources.js';
 import {decodePatientSources} from '../src/patient-sources.js';
 import {decodePrimaryGuidelines} from '../src/primary-guidelines.js';
@@ -42,4 +43,11 @@ const compact=(await fs.readFile('index.html','utf8'))
  .replace('class="compact-version-link" href="./compact.html#zoeken">Compacte versie','class="compact-version-link" href="./index.html#zoeken">Uitgebreide versie');
 await fs.writeFile('dist/compact.html',compact);
 await fs.writeFile('dist/integrated.html',integratedShell(compact));
+const jgzPatients=decodePatientSources(await read('data/patient-sources.json')).filter(r=>['groeigids','thuisarts','voedingscentrum'].includes(r.collection));
+const jgzNational=[...catalog.map(c=>({...c,source:c,collection:'national',navigation:true,description:'Verwijzing naar de oorspronkelijke richtlijn.',layer:'national',demo:false,owner:'Richtlijnendatabase'})),...actions.map(a=>({id:a.id,title:a.title,collection:'national',layer:'national',demo:false,source:sources.find(s=>s.id===a.source_id),record:a,owner:'Richtlijnendatabase',topics:[],specialties:['kno'],tasks:[a.action],version:'Overdracht 04-10-2026',description:'Bronverwijzing uit de bestaande catalogus.'}))];
+const jgzRows=validateJgzLibrary([...jgzNational,...decodePrimaryGuidelines(await read('data/primary-guidelines.json')),...jgzPatients,...decodeJgzAdditions(await read('data/jgz-additions.json'))]);
+await fs.writeFile('dist/data/jgz-library.json',JSON.stringify(jgzRows));
+const jgz=integratedShell(compact).replace('data-experience="inforium"','data-experience="inforium" data-edition="jgz"').replace('<title>Inforium Advanced × CHIPboard · Werkplek</title>','<title>Inforium CHIPboard · Jeugdgezondheidszorg</title>').replace('ADVANCED × CHIPBOARD','JEUGDGEZONDHEIDSZORG').replace('Inforium werkplek','Inforium JGZ').replace('Voor zorgprofessionals','Voor de jeugdgezondheidszorg').replace('GEÏNTEGREERD PROTOTYPE','JGZ · EIGEN WERKPLEK').replace(/<a href="#nieuws"[\s\S]*?<\/a>/,'').replace('href="#modules" data-nav="modules"','href="#bronnen" data-nav="bronnen"').replace('Modules & bronnen','Bronnenoverzicht').replace('Zoek richtlijnen, patiënteninformatie of nieuws','Zoek richtlijnen, informatie voor ouders of jongeren');
+await fs.writeFile('dist/jgz.html',jgz);
+console.log('JGZ:',jgzRows.length,'bronkaarten in',Object.keys(JGZ_COLLECTIONS).length,'collecties');
 console.log('Build OK:',sources.length,'bronnen;',actions.length,'records;',new Set(actions.map(a=>a.source_id)).size,'oorspronkelijke modules;',catalog.length,'aanvullende bronkaarten.');

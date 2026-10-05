@@ -73,3 +73,5 @@ body[data-experience=inforium]{background:#e9edf2;color:#213b42;font-family:'Seg
 
 [data-experience=inforium] .source-options input{flex:0 0 18px;width:18px;min-width:18px}
 @media(max-width:600px){[data-experience=inforium] .source-options{grid-template-columns:1fr}[data-experience=inforium] .source-options label{justify-content:flex-start}}
+
+[data-edition=jgz] .ia-shortcuts button{text-align:left;padding:16px;background:white;border:1px solid #d6e5dd;border-radius:12px;font-weight:600}[data-edition=jgz] .ia-shortcuts button small{display:block;color:#60776b;font-weight:400;margin-top:6px}

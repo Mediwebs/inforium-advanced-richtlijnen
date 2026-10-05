@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.12
+# Inforium CHIPboard v0.13
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -33,6 +33,10 @@ Twee afzonderlijke broncollecties toegevoegd aan alle drie interfaces: 200 NHG-v
 Zoek op titel of broncollectie, filter op informatietype en bewaar in de werkmap. Titel en link zijn gecontroleerd tegen het overzicht; individuele volledige teksten, publicatiedata en medische geldigheid zijn niet beoordeeld. De catalogus is een momentopname, geen live synchronisatie. Brondata: `data/primary-guidelines.json`; validatie: `src/primary-guidelines.js`. Wijzigingen na vergelijking met de officiële overzichten via een gecontroleerde release.
 
 Bronnen: [NHG](https://richtlijnen.nhg.org/) en [NCJ/JGZ](https://www.jgzrichtlijnen.nl/richtlijnen/). De NHG-browsercontrole kan een directe HTTP-controle blokkeren zonder dat de bron is vervallen.
+
+## Losstaande JGZ-versie
+
+[Open Inforium JGZ](https://mediwebs.github.io/inforium-advanced-richtlijnen/jgz.html#start). Eigen startpagina, bronselectie, werkmap en bronnenoverzicht in de Inforium-stijl. Alleen negen afgesproken collecties worden geladen: NCJ, NHG, Richtlijnendatabase, GroeiGids, Thuisarts, Voedingscentrum, RIVM, Kinderveiligheid en Pharos. 5.015 kaarten, waarvan 250 kennisbronnen en 4.765 patiënteninformatiekaarten. De algemene versies blijven ongewijzigd beschikbaar. [Samenstelling, herkomst en beperkingen](docs/JGZ.md).
 
 ## Gebruiken
 
