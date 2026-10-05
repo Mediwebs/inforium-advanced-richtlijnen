@@ -1,3 +1,4 @@
+import {decodePznl} from '../src/pznl.js';
 import {decodeGroningen} from '../src/groningen.js';
 import fs from 'node:fs/promises';
 import Ajv from 'ajv/dist/2020.js';
@@ -16,6 +17,7 @@ const ids=new Set();
 for(const a of actions){if(!validate(a))throw new Error(JSON.stringify(validate.errors));if(ids.has(a.id))throw new Error('Dubbel record');ids.add(a.id);if(!sources.some(s=>s.id===a.source_id))throw new Error('Bron ontbreekt');}
 for(const s of sources){if(new URL(s.url).protocol!=='https:')throw new Error('Onveilige bronlink');}
 modules.forEach(validateManifest);
+const pznl=decodePznl(await read('data/pznl.json'));console.log('PZNL:',pznl.length,'metadatarecords');
 const groningen=decodeGroningen(await read('data/groningen.json'));
 if(groningen.length!==4627)throw new Error('Inventarisaantal wijkt af van geimporteerde versie');
 console.log('Groningen:',groningen.length,'metadatarecords uit 2026-10-03');

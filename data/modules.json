@@ -94,5 +94,20 @@
       "open-source"
     ],
     "patientData": false
+  },
+  {
+    "id": "pznl",
+    "name": "PZNL · Palliatieve zorg",
+    "version": "0.5.0",
+    "kind": "source-library",
+    "url": "https://palliaweb.nl/richtlijnen-palliatieve-zorg",
+    "topics": [
+      "palliatieve-zorg"
+    ],
+    "capabilities": [
+      "read-catalog",
+      "open-source"
+    ],
+    "patientData": false
   }
 ]

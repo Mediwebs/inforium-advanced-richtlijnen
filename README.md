@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.4
+# Inforium CHIPboard v0.5
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -8,7 +8,11 @@ Vier vakgebieden: KNO, cardiologie, oncologie en radiotherapie. [Actuele uitbrei
 
 Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met algemene trefwoorden; geen dossiers of gegenereerde medische antwoorden.
 
-[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 4.640 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
+[Algemeen zoeken](https://mediwebs.github.io/inforium-advanced-richtlijnen/#zoeken) doorzoekt 4.701 bronkaarten. Alle trefwoorden gaan vóór gedeeltelijke overeenkomsten; elke kaart toont waarom hij gevonden is. [Werking en beperkingen v0.4](docs/V0.4.md).
+
+## PZNL en bronselectie v0.5
+
+61 PZNL-bronkaarten toegevoegd: 54 richtlijnen/handreikingen uit het officiële Palliaweb-overzicht, 2 praktijkbronnen en 5 ingangen voor patiënten en naasten. Selecteer bovenaan één of meerdere broncollecties. De selectie geldt voor algemeen zoeken; de bestaande vakbibliotheek blijft apart. [Werking, bronherkomst en verificatie](docs/V0.5.md).
 
 ## Gebruiken
 
@@ -32,7 +36,7 @@ Open http://127.0.0.1:4173. De relatieve assets en hash-navigatie werken ook ond
 ## Inhoud en beperkingen
 
 - 15 bronverwijzingen: 3 algemene, 7 richtlijnoverzichten en 5 afzonderlijke modules. 13 unieke bronkaarten: 3 oorspronkelijke voorbeelden en 10 nieuwe navigatiekaarten.
-- 0 professioneel goedgekeurde afgeleide records; 0 echte lokale, regionale, patiënten- of sociale bronnen gekoppeld.
+- 0 professioneel goedgekeurde afgeleide records; 0 echte lokale of regionale afspraken gekoppeld; PZNL-patiënteninformatie is beschikbaar via de algemene zoekfunctie.
 - Bronmetadata van de twee inhoudelijke modules opnieuw geraadpleegd op 2026-10-04; dit is geen medische validatie.
 - Filters en geselecteerde kaarten leven alleen in paginageheugen. Herladen wist het bord.
 - Geen generatieve AI, tracking, patiëntkenmerken, EPD-koppeling of verzending van zoektrefwoorden. Hosting en geopende externe sites verwerken gewone webverzoeken.
@@ -71,10 +75,10 @@ GitHub Actions valideert, test en bouwt bij een push naar main, en publiceert di
 
 ## Herkomst
 
-- Aangemaakt en laatst bijgewerkt: 2026-10-04.
+- Aangemaakt: 2026-10-04; laatst bijgewerkt: 2026-10-05.
 - AI-omgeving: Codex; project: Inforium CHIP / Chipboard.
 - Lokale Codex-projectmap: richtlijnen en lokale afspraken integratie.
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.4; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.5; niet klinisch gevalideerd.

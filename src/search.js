@@ -1,3 +1,5 @@
+export const SOURCE_COLLECTIONS={national:'Richtlijnendatabase',groningen:'Oncologie Groningen',palliaweb:'PZNL · Palliaweb / Pallialine','pznl-patient':'PZNL · Patiënten en naasten'};
+export const collectionOf=r=>r.collection||(r.groningen?'groningen':'national');
 // Deterministic bibliographic search. Scores express text overlap only.
 export const SEARCH_ALIASES = {
  borstkanker:['mamma','mammacarcinoom'],
@@ -20,6 +22,8 @@ export function buildSearchIndex(resources,labels={}){
  return resources.filter(r=>!r.demo).map(record=>{
   const fields=[];
   const add=(label,text,weight)=>{if(text){const value=String(text);fields.push({label,text:value,normalized:normalize(value),words:normalize(value).split(' '),weight});}};
+  add('Broncollectie',SOURCE_COLLECTIONS[collectionOf(record)],2);
+  (record.keywords||[]).forEach(x=>add('Catalogustrefwoord',x,5));
   add('Titel',record.title,12);add('Broncode',record.code,15);
   if(record.source?.title!==record.title)add('Oorspronkelijke brontitel',record.source?.title,8);
   (record.topics||[]).forEach(x=>add('Onderwerp',labels.topics?.[x]||x,7));
@@ -49,11 +53,12 @@ function excerpt(field,found){
  const at=field.normalized.indexOf(found),start=Math.max(0,at-45);
  return (start?'…':'')+field.text.slice(start,start+150)+(field.text.length>start+150?'…':'');
 }
-export function searchResources(index,query,{provider='',completeOnly=false}={}){
+export function searchResources(index,query,{provider='',collections=null,completeOnly=false}={}){
  const parsed=parseQuery(query);if(parsed.error||!parsed.terms.length)return {...parsed,results:[]};
  const {terms}=parsed,phrase=terms.join(' '),results=[];
  for(const item of index){
-  if(provider==='national'&&item.record.groningen||provider==='groningen'&&!item.record.groningen)continue;
+  if(collections!==null&&!collections.includes(collectionOf(item.record)))continue;
+  if(provider&&collectionOf(item.record)!==provider)continue;
   const matches=[];
   for(const term of terms){
    let best=null;
