@@ -1,4 +1,4 @@
-# Inforium CHIPboard v0.5
+# Inforium CHIPboard v0.6
 
 [Open Oncologie Groningen](https://mediwebs.github.io/inforium-advanced-richtlijnen/#groningen): 4.627 metadata-verwijzingen uit de eerdere inventaris van 3 oktober 2026. Geen nieuwe inhoudelijke hercontrole. [Integratie en herkomst](docs/V0.3.md).
 
@@ -13,6 +13,10 @@ Klikbare bronnenwerkplek voor richtlijnen en uitbreidbare bronlagen. Zoeken met 
 ## PZNL en bronselectie v0.5
 
 61 PZNL-bronkaarten toegevoegd: 54 richtlijnen/handreikingen uit het officiële Palliaweb-overzicht, 2 praktijkbronnen en 5 ingangen voor patiënten en naasten. Selecteer bovenaan één of meerdere broncollecties. De selectie geldt voor algemeen zoeken; de bestaande vakbibliotheek blijft apart. [Werking, bronherkomst en verificatie](docs/V0.5.md).
+
+## Resultaten verfijnen v0.6
+
+Filter op soort informatie, doelgroep, vakgebied en toegangsstatus. Alle aanvullende trefwoorden moeten binnen het bestaande resultaat voorkomen. Sorteer op overeenkomst, broncollectie, alfabet of geopende bronkaarten in deze sessie. Deze gebruikstelling is niet algemeen, wordt niet bewaard of verzonden en reset bij herladen. [Werking en verificatie](docs/V0.6.md).
 
 ## Gebruiken
 
@@ -81,4 +85,4 @@ GitHub Actions valideert, test en bouwt bij een push naar main, en publiceert di
 - Sessie-ID: 01a105b5-7b3f-7b10-8500-2b07574e5156. Chatnaam niet afzonderlijk vastgesteld.
 - Basis: Inforium_Richtlijnen_Codex_Overdracht.zip (versie 2026-10-04), inclusief bronregister, drie records, JSON-schema en acceptatiegevallen.
 - Repositorybestemming: Mediwebs/inforium-advanced-richtlijnen.
-- Status: werkdocument bij prototype v0.5; niet klinisch gevalideerd.
+- Status: werkdocument bij prototype v0.6; niet klinisch gevalideerd.

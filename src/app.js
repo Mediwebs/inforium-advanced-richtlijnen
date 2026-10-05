@@ -1,3 +1,4 @@
+import {refineResults,kindOf} from './refine.js';
 import {decodePznl} from './pznl.js';
 import {buildSearchIndex,searchResources,SOURCE_COLLECTIONS,collectionOf} from './search.js';
 import {decodeGroningen,filterGroningen,groningenKinds} from './groningen.js';
@@ -89,31 +90,44 @@ function groningenDetails(r){
 }
 
 
+const refinement={extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'},usage=new Map();
+let lastOpened=null;
 let searchIndex=[],searchQuery='',searchPage=0,searchCollections=new Set(Object.keys(SOURCE_COLLECTIONS)),searchComplete=false;
 function searchPageView(){
- const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete}),rows=response.results;
+ const response=searchResources(searchIndex,searchQuery,{collections:[...searchCollections],completeOnly:searchComplete});
+ const refined=refineResults(searchIndex,response.results,refinement,usage),rows=refined.results;
+ const kinds=Object.fromEntries([...new Set(searchIndex.map(x=>kindOf(x.record)))].sort((a,b)=>a.localeCompare(b,'nl')).map(k=>[k,k]));
  const pages=Math.max(1,Math.ceil(rows.length/12));searchPage=Math.min(searchPage,pages-1);
  const full=rows.filter(r=>r.matched===r.total).length;
  let resultHtml='',previous='';
  for(const hit of rows.slice(searchPage*12,(searchPage+1)*12)){
   const group=hit.matched===hit.total?'Alle trefwoorden gevonden':'Een deel van de trefwoorden gevonden';
-  if(group!==previous){resultHtml+='<h2 class="search-group">'+group+'</h2>';previous=group;}
+  if(refinement.sort==='relevance'&&group!==previous){resultHtml+='<h2 class="search-group">'+group+'</h2>';previous=group;}
   resultHtml+=card(hit.record,false,hit);
  }
- return heading('ALGEMEEN ZOEKEN','Zoek over alle aangesloten bronnen.','Eén zoekopdracht in de geselecteerde richtlijn-, Groningse en PZNL-bronnen. De grootste trefwoordovereenkomst staat vooraan.')+
+ return heading('ALGEMEEN ZOEKEN','Zoek over alle aangesloten bronnen.','Eén zoekopdracht in de geselecteerde richtlijn-, Groningse en PZNL-bronnen. Verfijn de resultaten met kenmerken en extra trefwoorden en kies de gewenste volgorde.')+
  '<p class="search-scope">'+searchIndex.length.toLocaleString('nl-NL')+' bronkaarten doorzoekbaar · titels, codes, onderwerpen, broncontexten en gekoppelde titels. Geen volledige documentteksten of live internetzoekactie.</p>'+
  '<div class="searchbox"><div class="filters search-filters"><label class="toggle"><input id="search-complete" type="checkbox" '+(searchComplete?'checked':'')+'>Alle trefwoorden moeten overeenkomen</label><button id="search-clear">Wis zoekopdracht</button></div><details class="ranking-help"><summary>Hoe wordt de volgorde bepaald?</summary><p>Eerst het aantal verschillende gevonden trefwoorden. Daarna de plek: broncode en titel tellen zwaarder dan broncontext of een gekoppelde titel. Een exacte titel of woordgroep krijgt extra gewicht. Woordbegin en enkele expliciet vermelde zoekverwanten tellen minder zwaar dan exacte woorden. Gelijke resultaten staan op titelvolgorde.</p><p>De volgorde drukt tekstovereenkomst uit, geen medische geschiktheid, kwaliteit of actualiteit. Bronstatussen blijven apart zichtbaar. Zoekverwanten zijn redactionele zoekhulpen, geen gelijkstelling van medische begrippen.</p></details></div>'+
- (!searchCollections.size?'<div class="empty"><h2>Selecteer ten minste één broncollectie</h2><p>Vink bovenaan de bronnen aan die je wilt doorzoekeneken.</p></div>':response.error?'<div class="notice" role="alert">'+esc(response.error)+'</div>':!response.terms.length?'<div class="empty"><h2>Vul bovenaan enkele trefwoorden in</h2><p>Bijvoorbeeld “borstkanker radiotherapie”, “neus anamnese” of een broncode. Gebruik algemene trefwoorden, geen patiëntgegevens.</p></div>':
- '<div class="section-row"><h2>Resultaten voor “'+esc(searchQuery)+'”</h2><span class="count" role="status">'+rows.length+' resultaten · '+full+' met alle trefwoorden · pagina '+(searchPage+1)+' van '+pages+'</span></div>'+
- (rows.length?'<div class="grid">'+resultHtml+'</div><div class="actions"><button id="search-prev" '+(searchPage===0?'disabled':'')+'>Vorige pagina</button><button id="search-next" '+(searchPage+1>=pages?'disabled':'')+'>Volgende pagina</button></div>':'<div class="empty"><h3>Geen trefwoordovereenkomst gevonden</h3><p>Probeer minder of andere woorden, of kies alle broncollecties. De catalogus bevat niet alle medische informatie. Er wordt geen antwoord gegenereerd.</p></div>'));
+ '<form id="refine-search" class="searchbox"><h2>Verfijn deze resultaten</h2><label for="refine-extra">Aanvullende trefwoorden — allemaal vereist binnen de huidige resultaten</label><div class="global-search-row"><input id="refine-extra" type="search" maxlength="200" autocomplete="off" spellcheck="false" value="'+esc(refinement.extra)+'" placeholder="Bijvoorbeeld pijn of naasten"><button type="submit">Verfijnen</button></div><div class="refine-filters">'+
+ '<label>Soort informatie<select id="refine-kind">'+options(kinds,refinement.kind,'Alle soorten')+'</select></label>'+
+ '<label>Doelgroep<select id="refine-audience">'+options({professional:'Zorgprofessionals',patient:'Patiënten en naasten',unknown:'Niet vastgelegd'},refinement.audience,'Alle doelgroepen')+'</select></label>'+
+ '<label>Vakgebied volgens catalogus<select id="refine-specialty">'+options({...specialties,unknown:'Niet ingedeeld'},refinement.specialty,'Alle vakgebieden')+'</select></label>'+
+ '<label>Toegang volgens inventaris<select id="refine-access">'+options({locked:'Mogelijk inloggen',unflagged:'Niet als afgeschermd gemarkeerd',unknown:'Niet vastgelegd'},refinement.access,'Alle toegangsstatussen')+'</select></label>'+
+ '<label>Volgorde<select id="refine-sort">'+options({relevance:'Grootste overeenkomst',used:'Meest gebruikt · deze sessie',source:'Broncollectie, daarna alfabet',alphabet:'Alfabet · A–Z'},refinement.sort,'Kies volgorde').replace('<option value="">Kies volgorde</option>','')+'</select></label></div><p class="muted">Filters combineren met EN. Niet-ingedeelde bronnen vallen buiten een specifiek vakgebied. Gebruik alleen algemene trefwoorden, geen patiëntgegevens.</p><p id="usage-explanation">Meest gebruikt telt geopende bronkaarten in deze browsersessie. Geen landelijke populariteit; geen opslag of verzending. Gelijke aantallen worden op overeenkomst gesorteerd.</p><button type="button" id="refine-reset">Wis verfijning en herstel volgorde</button></form>'+
+ (!searchCollections.size?'<div class="empty"><h2>Selecteer ten minste één broncollectie</h2><p>Vink bovenaan de bronnen aan die je wilt doorzoeken.</p></div>':(response.error||refined.error)?'<div class="notice" role="alert">'+esc(response.error||refined.error)+'</div>':!response.terms.length?'<div class="empty"><h2>Vul bovenaan enkele trefwoorden in</h2><p>Bijvoorbeeld “borstkanker radiotherapie”, “neus anamnese” of een broncode. Gebruik algemene trefwoorden, geen patiëntgegevens.</p></div>':
+ '<div class="section-row"><h2>Resultaten voor “'+esc(searchQuery)+'”</h2><span class="count" role="status">'+rows.length+' resultaten (van '+response.results.length+' vóór verfijning) · '+full+' met alle trefwoorden · pagina '+(searchPage+1)+' van '+pages+'</span></div>'+
+ (rows.length?'<div class="grid">'+resultHtml+'</div><div class="actions"><button id="search-prev" '+(searchPage===0?'disabled':'')+'>Vorige pagina</button><button id="search-next" '+(searchPage+1>=pages?'disabled':'')+'>Volgende pagina</button></div>':'<div class="empty"><h3>Geen trefwoordovereenkomst gevonden</h3><p>Probeer minder of andere woorden, wis de verfijning of kies alle broncollecties. De catalogus bevat niet alle medische informatie. Er wordt geen antwoord gegenereerd.</p></div>'));
 }
 function searchReason(hit){
  return '<section class="match search-reasons" aria-label="Waarom gevonden"><p><b>Waarom gevonden</b></p><strong>'+hit.matched+' van '+hit.total+' trefwoorden gevonden</strong>'+
  (hit.phraseBonus?'<p>Exacte woordgroep in de titel telt extra mee.</p>':'')+
  '<ul>'+hit.matches.map(m=>'<li><b>'+esc(m.term)+'</b> · '+esc(m.field)+(m.mode==='alias'?' · zoekverwant: '+esc(m.alias):m.mode==='prefix'?' · woordbegin':'')+'<span>“'+esc(m.snippet)+'”</span></li>').join('')+'</ul>'+
+ (hit.refinementMatches?.length?'<p><b>Aanvullende trefwoorden gevonden</b></p><ul>'+hit.refinementMatches.map(m=>'<li>'+esc(m.term)+' · '+esc(m.field)+(m.mode==='alias'?' · zoekverwant: '+esc(m.alias):m.mode==='prefix'?' · woordbegin':'')+'<span>“'+esc(m.snippet)+'”</span></li>').join('')+'</ul>':'')+
+ (refinement.sort==='used'?'<p>Deze sessie: '+hit.uses+' keer bronkaart geopend.</p>':'')+
  (hit.missing.length?'<p>Niet gevonden: '+hit.missing.map(esc).join(', ')+'</p>':'')+'</section>';
 }
 document.addEventListener('submit',e=>{
+ if(e.target.id==='refine-search'){e.preventDefault();refinement.extra=$('#refine-extra').value.trim();searchPage=0;render();$('#refine-extra').focus();return;}
  if(e.target.id!=='global-search')return;
  e.preventDefault();searchQuery=$('#global-query').value.trim();searchPage=0;
  location.hash='zoeken';render();$('#main').focus();
@@ -130,6 +144,7 @@ function render(){
 function showDialog(html){$('#detail-body').innerHTML=html;$('#detail').showModal();}
 function showResource(id){
  const r=resources.find(r=>r.id===id); if(!r)return;
+ if(!r.demo){usage.set(id,(usage.get(id)||0)+1);lastOpened=id;}
  let html='<div class="dialog-top"><span class="badge '+(r.demo?'demo':'warning')+'">'+(r.demo?'Demonstratie':'Redactioneel te beoordelen')+'</span><button class="close" data-close>Sluiten ✕</button></div><h2 id="detail-title">'+esc(r.title)+'</h2><p>'+esc(r.description)+'</p>';
  if(r.pznl){html+='<dl><dt>Broncollectie</dt><dd>'+esc(SOURCE_COLLECTIONS[r.collection])+'</dd><dt>Type</dt><dd>'+esc(r.kind)+'</dd><dt>Titel en link geraadpleegd</dt><dd>'+date(r.checked_at)+'</dd><dt>Laatst gewijzigd volgens het bronoverzicht</dt><dd>'+date(r.index_updated_at)+'</dd><dt>Geldigheid inhoudelijk beoordeeld</dt><dd>Niet vastgesteld; overzichtsdatum is geen geldigheidsbeoordeling.</dd><dt>Herkomst</dt><dd>'+external(r.provenance_url,'Bron van deze metadata')+'</dd><dt>Hergebruik</dt><dd>'+esc(r.rights)+'</dd></dl><p>Alleen bronnavigatie. Geen volledige tekst of automatisch behandeladvies. Het kwaliteitskader kan naar de vernieuwde website doorverwijzen; de datum uit het overzicht kan daarvan afwijken.</p>'+external(r.url,'Open oorspronkelijke bron','source-link');}
  else if(r.groningen){html+=groningenDetails(r);}
@@ -146,6 +161,7 @@ document.addEventListener('click',event=>{
  const button=event.target.closest('button');if(!button)return;
  if(button.hasAttribute('data-pznl')){searchCollections=new Set(['palliaweb','pznl-patient']);searchQuery='palliatieve zorg';$('#global-query').value=searchQuery;searchPage=0;location.hash='zoeken';render();}
  if(button.id==='sources-all'||button.id==='sources-none'){searchCollections=button.id==='sources-all'?new Set(Object.keys(SOURCE_COLLECTIONS)):new Set();searchPage=0;render();$('#'+button.id).focus();}
+ if(button.id==='refine-reset'){Object.assign(refinement,{extra:'',kind:'',audience:'',specialty:'',access:'',sort:'relevance'});searchPage=0;render();$('#refine-extra').focus();}
  if(button.id==='search-clear'){searchQuery='';$('#global-query').value='';searchPage=0;render();$('#global-query').focus();}
  if(button.id==='search-prev'||button.id==='search-next'){searchPage+=button.id==='search-next'?1:-1;render();$('#main').focus();}
  if(button.dataset.related){$('#detail').close();showResource(button.dataset.related);}
@@ -162,6 +178,7 @@ document.addEventListener('click',event=>{
  if(button.id==='contract')showDialog('<div class="dialog-top"><span class="badge">Aansluitroute</span><button data-close>Sluiten ✕</button></div><h2 id="detail-title">Een module toevoegen</h2><ol class="scope-list"><li>Leg eigenaar, bronrechten en beoogd gebruik vast.</li><li>Voeg een manifest toe aan data/modules.json met vaste HTTPS-link en patientData: false.</li><li>Map bronmetadata naar een eigen adapter; behoud versie en herkomst.</li><li>Laat inhoud en modulecombinatie beoordelen.</li><li>Valideer, test en publiceer een nieuwe versie via GitHub.</li></ol><p>Een link is nog geen API-integratie. Uitwisseling en authenticatie vereisen aanvullende bouw en toetsing.</p>');
 });
 document.addEventListener('change',e=>{
+ if(e.target.id.startsWith('refine-')){const key=e.target.id.slice(7);if(key!=='extra'&&Object.hasOwn(refinement,key)){refinement.extra=$('#refine-extra').value.trim();refinement[key]=e.target.value;searchPage=0;render();$('#refine-'+key).focus();}}
  if(e.target.dataset.collection){const id=e.target.dataset.collection;if(e.target.checked)searchCollections.add(id);else searchCollections.delete(id);searchPage=0;render();$('[data-collection="'+id+'"]').focus();}
  if(e.target.id==='search-complete'){searchComplete=e.target.checked;searchPage=0;render();$('#search-complete').focus();}
  if(e.target.id.startsWith('g-')){const key=e.target.id.slice(2);if(Object.hasOwn(groningenFilters,key)){groningenFilters[key]=e.target.value;if(key==='group')groningenFilters.path='';groningenPageIndex=0;render();$('#g-'+key).focus();}}
@@ -169,6 +186,7 @@ document.addEventListener('change',e=>{
  if(['topic','task','layer'].includes(e.target.id)){const id=e.target.id;filters[id]=e.target.value;render();$('#'+id).focus();}
  if(e.target.id==='demo'){filters.demo=e.target.checked;render();$('#demo').focus();}
 });
+$('#detail').addEventListener('close',()=>{if(location.hash==='#zoeken'&&lastOpened){const id=lastOpened;lastOpened=null;render();$('[data-open="'+id+'"]')?.focus();}});
 window.addEventListener('hashchange',()=>{render();$('#main').focus();});
 try {
  [sources,actions,modules,catalog,groningenPayload,pznlPayload]=await Promise.all([read('./data/bronnen.json'),read('./data/voorbeeldacties.json'),read('./data/modules.json'),read('./data/catalogus.json'),read('./data/groningen.json'),read('./data/pznl.json')]);
