@@ -61,3 +61,6 @@ const oncoRows=validateOncology([...jgzNational,...decodePrimaryGuidelines(await
 await fs.writeFile('dist/data/oncology-library.json',JSON.stringify(oncoRows));
 const onco=jgz.replace('data-edition="jgz"','data-edition="oncology"').replaceAll('Jeugdgezondheidszorg','Medische Oncologie Groningen').replaceAll('JEUGDGEZONDHEIDSZORG','ONCOLOGIE GRONINGEN').replaceAll('Inforium JGZ','Inforium Oncologie').replaceAll('Voor de jeugdgezondheidszorg','Voor oncologie en palliatieve zorg').replaceAll('JGZ · EIGEN WERKPLEK','ONCOLOGIE · EIGEN WERKPLEK').replaceAll('Zoek richtlijnen, informatie voor ouders of jongeren','Zoek oncologie, palliatie en patiënteninformatie').replace('<a href="#board"','<a href="#favorieten" data-nav="favorieten">☆ Mijn Favorieten</a><a href="#board"');
 await fs.writeFile('dist/oncologie.html',onco);console.log('Oncologie:',oncoRows.length,'bronkaarten');
+
+const chatShell=(await fs.readFile('dist/jgz.html','utf8')).replace('data-edition="jgz"','data-edition="jgz" data-chat="true"').replace('<title>Inforium CHIPboard · Jeugdgezondheidszorg</title>','<title>Inforium JGZ · Chatprototype</title>').replace('Inforium JGZ','Inforium JGZ · Chat').replace('JGZ · EIGEN WERKPLEK','JGZ · CHATFORK').replace('</head>','<link rel="stylesheet" href="./src/jgz-chat.css"></head>');
+await fs.writeFile('dist/jgz-chat.html',chatShell);
