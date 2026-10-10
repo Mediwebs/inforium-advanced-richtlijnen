@@ -64,3 +64,6 @@ await fs.writeFile('dist/oncologie.html',onco);console.log('Oncologie:',oncoRows
 
 const chatShell=(await fs.readFile('dist/jgz.html','utf8')).replace('data-edition="jgz"','data-edition="jgz" data-chat="true"').replace('<title>Inforium CHIPboard · Jeugdgezondheidszorg</title>','<title>Inforium JGZ · Chatprototype</title>').replace('Inforium JGZ','Inforium JGZ · Chat').replace('JGZ · EIGEN WERKPLEK','JGZ · CHATFORK').replace('</head>','<link rel="stylesheet" href="./src/jgz-chat.css"></head>');
 await fs.writeFile('dist/jgz-chat.html',chatShell);
+
+const simpleShell=chatShell.replace('data-chat="true"','data-chat="true" data-simple="true"').replace('<title>Inforium JGZ · Chatprototype</title>','<title>Inforium JGZ · Stel je vraag</title>').replace('</head>','<link rel="stylesheet" href="./src/jgz-simple.css"></head>').replace(/<header class="topbar">[\s\S]*?<\/header>/,'<header class="simple-top"><a class="simple-brand" href="#start">Inforium <small>JGZ</small></a><nav aria-label="Snelle toegang"><a href="#favorieten">Mijn Favorieten</a><details><summary>Meer</summary><div><a href="#board">Mijn consultmap</a><a href="#zoeken">Zoeken en bronnen kiezen</a><a href="./jgz-chat.html#start">Uitgebreide chatversie ↗</a></div></details></nav></header>');
+await fs.writeFile('dist/jgz-eenvoudig.html',simpleShell);

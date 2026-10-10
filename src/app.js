@@ -19,6 +19,7 @@ import {filterResources, validateManifest, stageUpdate} from './core.js';
 const compactMode=document.body.dataset.view==='compact';
 const integratedMode=document.body.dataset.experience==='inforium';
 const chatMode=document.body.dataset.chat==='true';
+const simpleMode=document.body.dataset.simple==='true';
 let chatHistory=[];
 const oncologyMode=document.body.dataset.edition==='oncology';
 const jgzMode=['jgz','oncology'].includes(document.body.dataset.edition);
@@ -187,10 +188,11 @@ function render(){
  const page=location.hash.slice(1)||(integratedMode?'start':compactMode?'zoeken':'bibliotheek');
  $('#source-collections').innerHTML='<legend>Welke bronnen wil je doorzoeken?</legend><div class="source-options">'+Object.entries(SOURCE_COLLECTIONS).map(([id,label])=>'<label><input type="checkbox" data-collection="'+id+'" '+(searchCollections.has(id)?'checked':'')+'> <span>'+esc(label)+' <small>('+searchIndex.filter(x=>collectionOf(x.record)===id).length+')</small></span></label>').join('')+'</div><div class="actions"><button type="button" id="sources-all">Alle bronnen</button><button type="button" id="sources-none">Geen bronnen</button></div>';
  const views={...(integratedMode?{start:()=>integratedHome(resources,selected),patienten:searchPageView,nieuws:searchPageView}:{}),zoeken:searchPageView,bibliotheek:library,groningen:groningenPage,board,modules:modulePage,beheer:management,kaders:scope};
- const jgzViews={start:()=>oncologyMode?oncologyHome(resources,selected):(chatMode?chatPanel(chatHistory):'')+jgzHome(resources,selected),zoeken:searchPageView,patienten:searchPageView,board,favorieten:favoritesPage,nieuws:oncologyMode?searchPageView:jgzNews,bronnen:()=>oncologyMode?oncologyRegister(resources):jgzRegister(resources),kaders:scope};
+ const jgzViews={start:()=>oncologyMode?oncologyHome(resources,selected):(chatMode?chatPanel(chatHistory,simpleMode):'')+(simpleMode?'':jgzHome(resources,selected)),zoeken:searchPageView,patienten:searchPageView,board,favorieten:favoritesPage,nieuws:oncologyMode?searchPageView:jgzNews,bronnen:()=>oncologyMode?oncologyRegister(resources):jgzRegister(resources),kaders:scope};
  $('#main').innerHTML=jgzMode?(jgzViews[page]||jgzViews.start)():(views[page]||library)();
  document.querySelectorAll('[data-nav]').forEach(a=>{const active=a.dataset.nav===page; a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  if(chatMode&&document.querySelector('.jgz-chat'))$('#global-search').before(document.querySelector('.jgz-chat'));
+ document.body.dataset.page=page;
  $('#board-count').textContent=selected.size;
  if(compactMode){
   $('#compact-sources-label').textContent='Bronnen · '+searchCollections.size+' van '+Object.keys(SOURCE_COLLECTIONS).length+' geselecteerd';
@@ -315,7 +317,7 @@ document.addEventListener('change',async event=>{
 document.addEventListener('submit',event=>{
  if(!chatMode||event.target.id!=='jgz-chat-form')return;
  event.preventDefault();const question=$('#chat-question').value.trim();if(!question)return;
- chatHistory.push(chatAnswer(searchIndex,question,favorites,[...searchCollections]));chatHistory=chatHistory.slice(-5);render();$('#chat-question').focus();$('#chat-status').textContent='Bronnenantwoord samengesteld. Bekijk de links en voorgestelde pakketten hierboven.';
+ chatHistory.push(chatAnswer(searchIndex,question,favorites,[...searchCollections]));chatHistory=chatHistory.slice(simpleMode?-1:-5);render();$('#chat-question').focus();$('#chat-status').textContent='Bronnenantwoord samengesteld. Bekijk de links en voorgestelde pakketten bij het antwoord.';
 });
 
 document.addEventListener('input',event=>{if(event.target.id==='package-filter'){const q=event.target.value.toLowerCase().trim();document.querySelectorAll('[data-package-search]').forEach(el=>el.hidden=!el.dataset.packageSearch.includes(q));}});
