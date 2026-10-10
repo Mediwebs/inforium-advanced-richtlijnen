@@ -17,3 +17,4 @@ body[data-simple=true]{background:#fbfcfa}
 [data-simple=true] .chat-history{max-height:none;overflow:visible;padding:0}[data-simple=true] .chat-answer{background:white;border-radius:16px;padding:24px;margin-top:18px}[data-simple=true] .chat-answer h2{font-size:21px;margin-top:0}
 [data-simple=true] #chat-status:empty{display:none}
 @media(max-width:600px){[data-simple=true] .simple-top{padding:18px 16px}.simple-top nav{gap:8px}.simple-brand{font-size:21px}.simple-brand small{display:none}[data-simple=true] .jgz-chat{margin:36px 0 20px;padding:16px}[data-simple=true] .jgz-chat.has-answer{margin-top:8px}[data-simple=true] #jgz-chat-form{padding:16px}[data-simple=true] .chat-answer{padding:16px}.simple-examples{gap:8px}.simple-examples>span{flex-basis:100%;text-align:center}}
+@media(max-width:600px){[data-simple=true] .simple-top{flex-wrap:wrap;gap:6px}.simple-top nav{gap:14px;flex-wrap:wrap}.simple-top nav a{font-size:13px}}
