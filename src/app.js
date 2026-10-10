@@ -202,6 +202,11 @@ function render(){
   if(page!=='zoeken'){const nodes=[...document.querySelectorAll('#main > .notice, #main > .stats, #main > .heading .intro')];if(nodes.length){const details=document.createElement('details');details.className='compact-page-info';details.innerHTML='<summary>Toelichting en bronstatus</summary>';nodes.forEach(n=>details.append(n));$('#main .heading')?.after(details);}}
  }
 }
+function viewWorkPackage(p){
+ const rows=resources.filter(r=>p.cards.includes(r.id)),missing=p.cards.length-rows.length;
+ const list=(title,patient)=>'<h3>'+title+'</h3><ul>'+ (rows.filter(r=>!!patientLink(r)===patient).map(r=>{const url=sourceUrl(r);let safe=false;try{safe=new URL(url).protocol==='https:';}catch{}return '<li>'+(safe?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(r.title)+' ↗</a>':esc(r.title))+(patient&&p.informationCards?.includes(r.id)?' <small>· in informatiepakket</small>':'')+'</li>';}).join('')||'<li>Geen bronnen in deze categorie.</li>')+'</ul>';
+ showDialog('<div class="dialog-top"><button data-close>Sluiten</button></div><h2 id="detail-title">'+esc(p.name||'Werkpakket')+'</h2><p>Gemaakt door '+esc(p.createdBy||'Niet vastgelegd')+' · '+date(p.createdAt)+'<br>Laatst gewijzigd door '+esc(p.updatedBy||'Niet vastgelegd')+' · '+date(p.updatedAt)+'</p><h3>Antwoordtekst</h3><div class="saved-answer-text">'+esc(p.answer||'Geen antwoordtekst opgeslagen.')+'</div>'+list('Professionele bronnen',false)+list('Cliëntinformatie',true)+(missing?'<p>'+missing+' bron(nen) niet meer beschikbaar in deze catalogus.</p>':'')+'<p>Bekijken verandert je consultmap niet.</p><button class="primary" data-restore-package="'+esc(p.id)+'">Toevoegen aan consultmap</button>');
+}
 function showDialog(html){$('#detail-body').innerHTML=html;$('#detail').showModal();}
 function showResource(id){
  const r=resources.find(r=>r.id===id); if(!r)return;
@@ -229,6 +234,7 @@ document.addEventListener('click',async event=>{
  const button=event.target.closest('button');if(!button)return;
  if(button.hasAttribute('data-remove-answer')){consultAnswers.delete([...consultAnswers.keys()][Number(button.dataset.removeAnswer)]);render();return;}
  if(chatMode&&button.hasAttribute('data-chat-save')){const a=chatHistory[Number(button.dataset.chatSave)];if(a)editPackage({name:a.query,answer:a.answer,question:a.question,available:a.hits.map(h=>h.record.id),cards:a.hits.map(h=>h.record.id),informationCards:a.patientIds});return;}
+ if(jgzMode&&button.dataset.viewPackage){const p=favorites.packages.find(p=>p.id===button.dataset.viewPackage);if(p)viewWorkPackage(p);return;}
  if(jgzMode&&button.dataset.previewSaved){const p=favorites.packages.find(p=>p.id===button.dataset.previewSaved);if(p)showDialog(packagePreview(resources,new Set(p.informationCards||p.cards)));return;}
  if(jgzMode&&button.dataset.editPackage){const p=favorites.packages.find(p=>p.id===button.dataset.editPackage);if(p)editPackage({...packageFields(p),...p,available:p.cards,informationCards:packageFields(p).informationCards});return;}
  if(chatMode&&button.id==='chat-clear'){chatHistory=[];render();$('#chat-question').focus();return;}
@@ -242,7 +248,7 @@ document.addEventListener('click',async event=>{
  if(jgzMode&&button.dataset.favorite){const id=button.dataset.favorite;if(!resources.some(r=>r.id===id))return;const cards=favorites.cards.includes(id)?favorites.cards.filter(x=>x!==id):[...favorites.cards,id];if(saveFavorites({...favorites,cards})){button.textContent=cards.includes(id)?'★ In Favorieten':'☆ Opslaan in Favorieten';render();toast('Favorieten bijgewerkt');}return;}
  if(jgzMode&&button.id==='save-package'){if(!selected.size&&!consultAnswers.size){toast('Selecteer eerst een antwoord of bron voor je consultmap');return;}editPackage({name:[...consultAnswers.values()][0]?.question||'',answer:[...consultAnswers.values()].map(a=>a.answer).join('\n\n---\n\n'),question:[...consultAnswers.values()].map(a=>a.question).join('; '),available:[...selected],cards:[...selected],informationCards:[...selected].filter(id=>patientLink(resources.find(r=>r.id===id)))});return;}
 
- if(jgzMode&&button.dataset.restorePackage){const p=favorites.packages.find(p=>p.id===button.dataset.restorePackage);if(p){if(p.answer)consultAnswers.set(p.answer,{answer:p.answer,question:p.question||p.name});p.cards.filter(id=>resources.some(r=>r.id===id)).forEach(id=>selected.add(id));location.hash='board';render();toast('Werkpakket toegevoegd aan je consultmap');}return;}
+ if(jgzMode&&button.dataset.restorePackage){const p=favorites.packages.find(p=>p.id===button.dataset.restorePackage);if(p){if($('#detail').open)$('#detail').close();if(p.answer)consultAnswers.set(p.answer,{answer:p.answer,question:p.question||p.name});p.cards.filter(id=>resources.some(r=>r.id===id)).forEach(id=>selected.add(id));location.hash='board';render();toast('Werkpakket toegevoegd aan je consultmap');}return;}
  if(jgzMode&&button.dataset.removePackage){if(saveFavorites({...favorites,packages:favorites.packages.filter(p=>p.id!==button.dataset.removePackage)}))render();return;}
  if(button.dataset.patientAction){
   const r=resources.find(r=>r.id===button.dataset.resource),url=patientLink(r);if(!url)return;
