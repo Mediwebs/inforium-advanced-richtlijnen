@@ -1,7 +1,11 @@
 import {buildSearchIndex,searchResources} from './search.js';
 import {demoResources,shareable,packageText,readWorkspace} from './jgz-efficient-workspace.js';
+import {clientResources} from './jgz-clienten.js';
+const clientsOnly=document.body.dataset.edition==='clienten';
+const storagePrefix=clientsOnly?'jgz-clienten':'jgz-efficient';
 const $=s=>document.querySelector(s);
 const labels={'local-jgz':'JGZ Duin & Dreef · fictief',ncj:'NCJ · JGZ',nhg:'NHG',national:'Richtlijnendatabase',groeigids:'GroeiGids',thuisarts:'Thuisarts',voedingscentrum:'Voedingscentrum',rivm:'RIVM',kinderveiligheid:'Kinderveiligheid',pharos:'Pharos'};
+if(clientsOnly)for(const key of ['ncj','nhg','national'])delete labels[key];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>n.toLocaleString('nl-NL');
 const date=s=>s?new Date(s).toLocaleDateString('nl-NL'):'Niet beoordeeld';
@@ -10,16 +14,16 @@ const audience=r=>r.audience==='patient'?'patient':'professional';
 let rows=[],index=[],found=[],current=null,selected=new Set(),collections=new Set(Object.keys(labels)),target='all',page=0,selectionOnly=false,view='library',lastResponse=null;
 let favorites=new Set(),groups=[],scope='all',activeGroup='';
 const pageSize=12;
-function saveWorkspace(){try{localStorage.setItem('jgz-efficient-workspace',JSON.stringify({favorites:[...favorites],groups}));}catch{toast('Opslag niet beschikbaar; wijzigingen blijven alleen in dit venster.');}}
+function saveWorkspace(){try{localStorage.setItem(storagePrefix+'-workspace',JSON.stringify({favorites:[...favorites],groups}));}catch{toast('Opslag niet beschikbaar; wijzigingen blijven alleen in dit venster.');}}
 function download(text,name,type='text/plain'){const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([text],{type}));link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);}
 function groupOptions(){const picker=$('#group-picker');picker.innerHTML='<option value="">Kies een eigen collectie…</option>'+groups.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.name)+' ('+g.ids.length+')</option>').join('');picker.value=activeGroup;$('#group-delete').disabled=!activeGroup;$('#save-group').disabled=!activeGroup||!selected.size;}
 function setScope(next){scope=next;selectionOnly=next==='selection';setTabs();refresh();}
-function showPackage(){const chosen=rows.filter(r=>selected.has(r.id));$('#package-text').value=packageText(chosen);$('#package-summary').textContent=chosen.filter(shareable).length+' deelbare items · '+chosen.filter(r=>!shareable(r)).length+' interne of niet-deelbare items blijven buiten het ouderpakket.';$('#internal-items').innerHTML=chosen.filter(r=>!shareable(r)).map(r=>'<li>'+esc(r.title)+(r.demo?' · FICTIEF':'')+'</li>').join('');for(const id of ['copy-package','download-package','email-package'])$('#'+id).disabled=!chosen.some(shareable);$('#package-dialog').showModal();}
+function showPackage(){const chosen=rows.filter(r=>selected.has(r.id));$('#package-text').value=packageText(chosen);$('#package-summary').textContent=chosen.filter(shareable).length+' deelbare items · '+chosen.filter(r=>!shareable(r)).length+(clientsOnly?' items met een te controleren link blijven buiten het pakket.':' interne of niet-deelbare items blijven buiten het ouderpakket.');$('#internal-items').innerHTML=chosen.filter(r=>!shareable(r)).map(r=>'<li>'+esc(r.title)+(r.demo?' · FICTIEF':'')+'</li>').join('');for(const id of ['copy-package','download-package','email-package'])$('#'+id).disabled=!chosen.some(shareable);$('#package-dialog').showModal();}
 
 let toastTimer;
 function toast(message){$('#toast').textContent=message;$('#toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').style.display='none',3300);}
 async function copy(text){if(!text){toast('Selecteer eerst één of meer bronnen.');return;}try{await navigator.clipboard.writeText(text);toast('Gekopieerd naar het klembord.');}catch{toast('Kopiëren niet beschikbaar. Download de JSON via API & integratie.');}}
-function persist(){try{sessionStorage.setItem('jgz-efficient-selection',JSON.stringify([...selected]));}catch{}}
+function persist(){try{sessionStorage.setItem(storagePrefix+'-selection',JSON.stringify([...selected]));}catch{}}
 function toggle(id){selected.has(id)?selected.delete(id):selected.add(id);persist();refresh(false);}
 function select(id){current=rows.find(r=>r.id===id)||null;renderDetails();renderRows();if(matchMedia('(max-width:1150px)').matches)$('#detail').scrollIntoView({behavior:'smooth',block:'start'});}
 function matching(){let result;
@@ -105,11 +109,12 @@ $('#download-json').onclick=()=>{const blob=new Blob([JSON.stringify(lastRespons
 for(const selector of ['#about','#provenance'])$(selector).onclick=()=>$('#source-dialog').showModal();
 $('.close').onclick=()=>$('#source-dialog').close();
 document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)&&!$('#source-dialog').open){e.preventDefault();$('#query').focus();}});
-async function init(){try{const response=await fetch('./data/jgz-library.json');if(!response.ok)throw Error('HTTP '+response.status);rows=[...demoResources,...await response.json()];index=buildSearchIndex(rows,{}, {includeDemos:true});$('#total').textContent=fmt(rows.length);
- let stored=null;try{stored=localStorage.getItem('jgz-efficient-workspace');}catch{}
+async function init(){try{const response=await fetch(clientsOnly?'./data/jgz-clienten-library.json':'./data/jgz-library.json');if(!response.ok)throw Error('HTTP '+response.status);rows=[...demoResources,...await response.json()];if(clientsOnly)rows=clientResources(rows);index=buildSearchIndex(rows,{}, {includeDemos:true});$('#total').textContent=fmt(rows.length);
+ let stored=null;try{stored=localStorage.getItem(storagePrefix+'-workspace');}catch{}
  const savedWorkspace=readWorkspace(stored,new Set(rows.map(r=>r.id)));favorites=new Set(savedWorkspace.favorites);groups=savedWorkspace.groups;
  if(!stored)groups=[{id:'example-welcome',name:'Voorbeeld · Kennismakingsconsult',ids:['demo-duindreef-welkom','demo-duindreef-voorbereiden','demo-duindreef-protocol-consult']},{id:'example-sleep',name:'Voorbeeld · Slapen & ouderinformatie',ids:['demo-duindreef-slaap','demo-duindreef-protocol-delen','ncj-jgz-richtlijn-slaap']}];
- try{const saved=JSON.parse(sessionStorage.getItem('jgz-efficient-selection')||'[]');selected=new Set((Array.isArray(saved)?saved:[]).filter(id=>rows.some(r=>r.id===id)));}catch{}
+ groups=groups.map(g=>({...g,ids:g.ids.filter(id=>rows.some(r=>r.id===id))}));
+ try{const saved=JSON.parse(sessionStorage.getItem(storagePrefix+'-selection')||'[]');selected=new Set((Array.isArray(saved)?saved:[]).filter(id=>rows.some(r=>r.id===id)));}catch{}
  $('#collections').innerHTML=Object.entries(labels).map(([id,label])=>`<label class="collection"><input type="checkbox" value="${id}" checked><span>${esc(label)}</span><small>${fmt(rows.filter(r=>r.collection===id).length)}</small></label>`).join('');
  $('#source-summary').innerHTML=Object.entries(labels).map(([id,label])=>`<div>${esc(label)} <strong>${fmt(rows.filter(r=>r.collection===id).length)}</strong></div>`).join('');
  const params=new URLSearchParams(location.search);$('#query').value=(params.get('q')||'').slice(0,200);setView(params.get('view')==='api'?'api':'library');

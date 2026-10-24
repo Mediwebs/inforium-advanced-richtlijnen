@@ -1,0 +1,18 @@
+export function clientShell(html){return html
+ .replace('<body>','<body data-edition="clienten">')
+ .replaceAll('Inforium JGZ · Efficiënt','Inforium JGZ · Patiënten- en cliënteninformatie')
+ .replace('Patiënten- en cliënteninformatiee editie','Patiënten- en cliënteninformatie')
+ .replace('href="./jgz-efficient.html"','href="./jgz-clienten.html"')
+ .replace('EFFICIËNT</span>','CLIËNTENINFO</span>')
+ .replace('Richtlijnen en informatie voor ouders en jongeren, direct binnen handbereik.','Patiënten- en cliënteninformatie voor ouders en jongeren. Snel vinden, bewaren en delen.')
+ .replace('Richtlijnen en informatie voor ouders en jongeren','Patiënten- en cliënteninformatie')
+ .replace('9 bronnen + 1 fictieve organisatie','6 bronnen + 1 fictieve organisatie')
+ .replace('Zoek een onderwerp, richtlijn of trefwoord…','Zoek informatie, een folder of een onderwerp…')
+ .replace('<h2>Informatie voor</h2><div id="audiences"','<div hidden id="audiences"')
+ .replace('Bekijk het ouderpakket en de interne protocollen in de volgende stap.','Bekijk en deel het informatiepakket in de volgende stap.')
+ .replace('<h3>Intern voor de professional</h3><ul id="internal-items"></ul><p>Interne protocollen gaan niet mee in het ouderpakket.</p>','<h3>Niet opgenomen in het pakket</h3><ul id="internal-items"></ul><p>Kaarten met een te controleren link worden niet gedeeld.</p>')
+ .replace('5.015 bronkaarten uit negen collecties, aangevuld met zes duidelijk fictieve organisatievoorbeelden van JGZ Duin & Dreef.','4.765 informatiekaarten uit zes patiënteninformatiecollecties, aangevuld met drie fictieve organisatiefolders van JGZ Duin & Dreef. Professionele richtlijnen en interne protocollen zijn uitgesloten.')
+ .replace('De Richtlijnendatabase bevat slechts 13 geselecteerde kaarten. NHG en andere collecties bevatten ook onderwerpen buiten de JGZ.','De bronnen bevatten ook onderwerpen buiten de JGZ. De selectie is gebaseerd op de doelgroep in de broninventaris, niet op individuele geschiktheid.')
+ .replaceAll('./data/jgz-library.json','./data/jgz-clienten-library.json')
+ .replace('docs/JGZ.md en src/search.js.','docs/JGZ.md, src/search.js en de expliciete patiëntenselectie in src/jgz-clienten.js.')
+ .replace('De compacte Inforium JGZ-werkplek: zoek, kies en open richtlijnen en informatie voor ouders en jongeren.','De Inforium JGZ-werkplek voor patiënten- en cliënteninformatie: zoek, bewaar en deel informatie voor ouders en jongeren.');}
