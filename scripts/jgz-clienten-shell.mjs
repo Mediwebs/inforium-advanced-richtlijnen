@@ -1,5 +1,6 @@
 export function clientShell(html){return html
  .replace('<body>','<body data-edition="clienten">')
+ .replace('src="./src/jgz-efficient.js"','src="./src/jgz-efficient.js?v=clienten-1"')
  .replaceAll('Inforium JGZ · Efficiënt','Inforium JGZ · Patiënten- en cliënteninformatie')
  .replace('Patiënten- en cliënteninformatiee editie','Patiënten- en cliënteninformatie')
  .replace('href="./jgz-efficient.html"','href="./jgz-clienten.html"')
