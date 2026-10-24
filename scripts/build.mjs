@@ -67,3 +67,4 @@ await fs.writeFile('dist/jgz-chat.html',chatShell);
 
 const simpleShell=chatShell.replace('data-chat="true"','data-chat="true" data-simple="true"').replace('<title>Inforium JGZ · Chatprototype</title>','<title>Inforium JGZ · Stel je vraag</title>').replace('</head>','<link rel="stylesheet" href="./src/jgz-simple.css"></head>').replace(/<header class="topbar">[\s\S]*?<\/header>/,'<header class="simple-top"><a class="simple-brand" href="#start">Inforium <small>JGZ</small></a><nav aria-label="Snelle toegang"><a href="#board">Consultmap (<span class="simple-consult-count">0</span>)</a><a href="#favorieten">Favorieten</a><details><summary>Meer</summary><div><a href="#board">Mijn consultmap</a><a href="#zoeken">Zoeken en bronnen kiezen</a><a href="./jgz-chat.html#start">Uitgebreide chatversie ↗</a></div></details></nav></header>');
 await fs.writeFile('dist/jgz-eenvoudig.html',simpleShell);
+await fs.copyFile('jgz-efficient.html','dist/jgz-efficient.html');
